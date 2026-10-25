@@ -4134,6 +4134,12 @@ function screeningStatus(ref) {
   const o = OUTCOMES[s.outcome];
   return { code: s.outcome, text: o.short, tone: o.tone };
 }
+function travelHistoryHTML(t) {
+  if (!t.travelHistory) return '<span class="muted">Not recorded</span>';
+  if (t.travelHistory === 'No') return 'No other countries visited';
+  const list = h(t.travelCountries || 'Yes — countries not listed');
+  return AFFECTED_COUNTRIES.some(c => (t.travelCountries || '').toLowerCase().includes(c.toLowerCase())) ? `<b style="color:var(--crit-ink)">${list} (Ebola-affected)</b>` : list;
+}
 function verifyFor(t) { return verifyCode([t.ref, t.name, t.docNumber, String(sod(t.regAt))]); }
 function travelerQRPayload(t) {
   const s = screeningStatus(t.ref), lt = latestTest(t.ref);
@@ -5615,6 +5621,11 @@ PAGES.register = {
             ${field('Phone number', `<input class="input" name="phone" type="tel" inputmode="tel" value="+252 " data-input="reg-lookup">`, { req: true, span: 6, err: 'Enter a phone number with at least 7 digits.' })}
             ${field('Coming from (country)', `<select class="select" name="originCountry">${options(COUNTRY_LIST, FOREIGN_DEFAULT[st] || 'Ethiopia')}</select>`, { req: true, span: 4, hint: '<span id="origin-hint"></span>' })}
             ${field('Going to', `<input class="input" name="destination" list="dest-list" maxlength="60" value="${attr((stObj.city || 'Hargeisa') + ', Somaliland')}"><datalist id="dest-list">${Object.entries(SL_REGIONS).flatMap(([r, towns]) => towns.map(tn => `<option value="${attr(tn)}, Somaliland">${h(r)} region</option>`)).join('')}${COUNTRY_LIST.filter(c => c !== 'Somaliland' && c !== 'Other').map(c => `<option value="${attr(c)}">`).join('')}</datalist>`, { req: true, span: 4, err: 'Enter the destination town or country.' })}
+            ${field('Staying at — hotel or address', `<input class="input" name="stayAddress" maxlength="120" placeholder="e.g. Jee Hotel, Jigjiga Yar, Hargeisa">`, { span: 12, hint: 'Where the traveler can be found for follow-up (hotel, area / district, town). Required for arriving travelers.', err: 'Enter where the traveler will stay (hotel or area).' })}
+            <div class="f s12"><label>Travel history — has the traveler visited any other country in the last 6 months?<span class="req" aria-hidden="true">*</span></label>
+              <div class="radios"><label class="radio"><input type="radio" name="travelHistory" value="No" data-change="reg-th">No</label><label class="radio"><input type="radio" name="travelHistory" value="Yes" data-change="reg-th">Yes</label></div>
+              <span class="err">Answer yes or no.</span></div>
+            <div class="f s12 hidden" id="th-countries"><label>Countries visited and approximate dates<span class="req" aria-hidden="true">*</span></label><input class="input" name="travelCountries" maxlength="160" placeholder="e.g. Uganda (Aug 2026), Kenya (Sep 2026)"><span class="hint" id="th-hint"></span><span class="err">List the countries visited in the last 6 months.</span></div>
             <div class="f s12"><label>Transport mode</label><div class="radios" id="transport-chips">${transportChips(st)}</div></div>
             <div class="f s12" id="transport-details-wrap">${transportDetailsHTML(st)}</div>
             <input type="hidden" name="transportRef" value="">
@@ -5658,6 +5669,7 @@ ACT['reg-dir'] = el => {
   else { form.originCountry.value = FOREIGN_DEFAULT[form.station.value] || 'Ethiopia'; form.destination.value = `${st.city || 'Hargeisa'}, Somaliland`; }
   originHint(form);
 };
+ACT['reg-th'] = el => { const w = document.getElementById('th-countries'); if (w) w.classList.toggle('hidden', el.value !== 'Yes'); };
 ACT['reg-dob-toggle'] = () => {
   const form = document.getElementById('reg-form');
   const show = form.dob.classList.contains('hidden');
@@ -5678,6 +5690,8 @@ ACT['reg-sample'] = () => {
   form.nationality.value = nat;
   form.docNumber.value = `${NATIONALITIES[nat].doc}${pad(intBetween(r, 0, 9999999), 7)}`;
   form.phone.value = genPhone(r, nat);
+  form.stayAddress.value = pick(r, ['Jee Hotel, Jigjiga Yar, Hargeisa', 'Ambassador Hotel, Airport Road, Hargeisa', 'Maan-Soor Hotel, Hargeisa', 'Family home, 26 June district, Hargeisa', 'Mansoor Hotel, Berbera', 'Relative’s house, Wajaale town']);
+  form.querySelector('[name=travelHistory][value=No]').checked = true; document.getElementById('th-countries')?.classList.add('hidden'); form.travelCountries.value = '';
   clearInvalid(form);
   toast('Sample traveler filled', 'Review the details and save.');
 };
@@ -5698,6 +5712,9 @@ function submitRegistration(form, next) {
   if (!td || td < addDays(sod(Date.now()), -30) || td > addDays(Date.now(), 2)) bad('travelDate');
   if (!d.originCountry) bad('originCountry');
   if (!d.destination || d.destination.length < 2) bad('destination');
+  if (d.direction === 'Entry' && (d.stayAddress || '').length < 3) bad('stayAddress');
+  if (!d.travelHistory) bad('travelHistory');
+  if (d.travelHistory === 'Yes' && (d.travelCountries || '').length < 3) bad('travelCountries');
   if (!ok) { focusFirstInvalid(form); toast('Some required details are missing', 'Fields needing attention are highlighted in red.'); return; }
   const dup = DB.travelers.find(t => t.docNumber === d.docNumber.toUpperCase() && sod(t.regAt) === sod(Date.now()));
   const save = () => {
@@ -5706,6 +5723,7 @@ function submitRegistration(form, next) {
       name: d.name.replace(/\s+/g, ' '), sex: d.sex, dob: dobTs, age: dobTs ? null : +d.age, nationality: d.nationality,
       docType: d.docType, docNumber: d.docNumber.toUpperCase(), phone: d.phone.trim(), originCountry: d.originCountry, destination: d.destination,
       travelDate: td, station: d.station, direction: d.direction, transport: d.transport, transportRef,
+      stayAddress: d.stayAddress || '', travelHistory: d.travelHistory, travelCountries: d.travelHistory === 'Yes' ? d.travelCountries : '',
     });
     UI.registerStation = d.station;
     toast('Traveler registered', `${traveler.ref} — dashboard updated.`);
@@ -5903,6 +5921,7 @@ function openTravelerDrawer(ref, tab) {
             <div><dt>Contact number</dt><dd>${h(t.phone)}</dd></div><div><dt>Border station</dt><dd>${h(stationName(t.station))}</dd></div>
             <div><dt>Direction</dt><dd>${t.direction}</dd></div><div><dt>${t.direction === 'Entry' ? 'Arrival' : 'Departure'}</dt><dd>${fmtDT(t.travelDate)}</dd></div>
             <div><dt>Country of origin</dt><dd>${h(t.originCountry)}</dd></div><div><dt>Destination</dt><dd>${h(t.destination)}</dd></div>
+            <div><dt>Staying at (address)</dt><dd>${t.stayAddress ? h(t.stayAddress) : '<span class="muted">Not recorded</span>'}</dd></div><div><dt>Travel history (last 6 months)</dt><dd>${travelHistoryHTML(t)}</dd></div>
             <div><dt>Transport</dt><dd>${h(t.transport)}${t.transportRef ? ` · ${h(t.transportRef)}` : ''}</dd></div></dl>
           <div style="text-align:center"><div style="width:120px;height:120px;border:1px solid var(--line);border-radius:8px;padding:4px;background:#fff">${qrSvg(travelerQRPayload(t), { margin: 1 })}</div><div class="small muted" style="margin-top:6px">Verification code</div><div class="mono small"><b>${verifyFor(t)}</b></div></div>
         </div></div>
@@ -6629,6 +6648,7 @@ function buildReport(p) {
         <tr><th>${h(t.docType)}</th><td class="mono">${h(t.docNumber)}</td><th>Contact number</th><td>${h(t.phone)}</td></tr>
         <tr><th>Direction</th><td>${t.direction} — ${fmtDT(t.travelDate)}</td><th>Transport</th><td>${h(t.transport)}${t.transportRef ? ' · ' + h(t.transportRef) : ''}</td></tr>
         <tr><th>Country of origin</th><td>${h(t.originCountry)}</td><th>Destination</th><td>${h(t.destination)}</td></tr>
+        <tr><th>Staying at (address)</th><td>${h(t.stayAddress || 'Not recorded')}</td><th>Travel history (6 months)</th><td>${travelHistoryHTML(t)}</td></tr>
       </tbody></table></div>
       <div class="r-section">Health screening</div>${rTable(['Reference', 'Date and time', 'Temp.', 'Symptoms', 'Outcome', 'Referral', 'Officer'], scr.map(s => [`<span class="mono">${s.id}</span>`, fmtSDT(s.at), s.temp ? s.temp.toFixed(1) + ' °C' : '—', h(s.symptoms.join(', ') || 'None'), h(OUTCOMES[s.outcome].label), s.outcome === 'referred' ? h(s.referralStatus) : '—', h(s.officer)]))}
       <div class="r-section">Laboratory tests</div>${rTable(['Test', 'Test type', 'Specimen', 'Collected', 'Status', 'Result', 'Result date', 'Laboratory'], tests.map(x => [`<span class="mono">${x.id}</span>`, h(x.testName), h(x.specimenType), x.collectedAt ? fmtSDT(x.collectedAt) : '—', h(x.status), `<b>${h(resultDisplay(x).text)}</b>`, x.resultAt ? fmtSDT(x.resultAt) : '—', h(shortLab(x.lab))]))}
