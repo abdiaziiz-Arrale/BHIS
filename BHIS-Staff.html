@@ -124,6 +124,12 @@ h1, h2, h3, h4 { margin: 0; font-weight: 600; letter-spacing: -.01em; }
 .nav .count.crit { background: var(--crit); color: #fff; }
 .nav .count.warn { background: var(--warn); color: #231600; }
 .sidebar-foot { margin-top: auto; padding: 14px; border-top: 1px solid rgba(255,255,255,.08); }
+.partner-strip { margin-bottom: 12px; padding: 10px; border-radius: 10px; background: #fff; text-align: center; }
+.partner-strip .ps-l { display: block; font-size: 10.5px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 6px; }
+.partner-strip .ps-logos { display: flex; align-items: center; justify-content: center; gap: 12px; }
+.partner-strip img { height: 44px; width: auto; max-width: 46%; object-fit: contain; }
+.r-partners { display: flex; align-items: center; justify-content: flex-end; gap: 12px; margin-top: 8px; font-size: 10px; color: #4a5752; text-transform: uppercase; letter-spacing: .05em; font-weight: 600; }
+.r-partners img { height: 34px; width: auto; object-fit: contain; }
 .user-card { display: flex; gap: 10px; align-items: center; }
 .avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--green-600); display: grid; place-items: center; font-weight: 600; color: #fff; font-size: 13px; flex: none; }
 .user-card .who { font-size: 13px; color: #fff; line-height: 1.25; }
@@ -667,6 +673,7 @@ table.tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
   .nav .count:not(.crit):not(.warn) { display: none; }
   .nav .count { position: absolute; top: 3px; right: 3px; min-width: 18px; padding: 0 5px; font-size: 10.5px; line-height: 17px; }
   .sidebar-foot { padding: 12px 8px; }
+  .partner-strip { padding: 6px 4px; } .partner-strip .ps-l { display: none; } .partner-strip .ps-logos { flex-direction: column; gap: 6px; } .partner-strip img { height: 30px; max-width: 100%; }
   .user-card { justify-content: center; }
   .foot-actions button { padding: 8px 0; }
   .foot-actions svg { width: 17px; height: 17px; }
@@ -1092,6 +1099,7 @@ details.more summary { cursor: pointer; color: var(--green-700); font-size: 13px
       </div>
     <nav class="nav" id="nav"></nav>
     <div class="sidebar-foot">
+      <div class="partner-strip" aria-label="Partners"><span class="ps-l">In partnership with</span><div class="ps-logos"><img src="KMUH.jpg" alt="Kaohsiung Medical University Chung-Ho Memorial Hospital logo" title="Kaohsiung Medical University Chung-Ho Memorial Hospital"><img src="ICDF.jpg" alt="Taiwan ICDF logo" title="Taiwan ICDF"></div></div>
       <div class="user-card"><div class="avatar" title="Staff">ST</div></div>
       <div class="foot-actions"><button data-act="open-about" title="About, logo and settings">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><span class="lbl">About &amp; settings</span></button></div>
@@ -5266,7 +5274,7 @@ ACT['open-alert'] = el => { UI.alerts.selected = el.dataset.id; UI.alerts.status
 
 /* ---------- shared report header (also used by dashboard print) ---------- */
 function reportHeaderHTML(title, ref, qrText) {
-  return `<div class="r-head"><div class="r-logo">${reportLogoHTML()}</div><div class="r-org"><div class="l1">${APP.country}</div><div class="l2">${APP.ministry}</div><div class="l3">${APP.name} (${APP.short})</div></div><div class="r-qr">${qrSvg(qrText, { margin: 3 })}<span>SCAN TO VERIFY</span></div></div><div class="r-flag"><i></i><i></i><i></i></div>
+  return `<div class="r-head"><div class="r-logo">${reportLogoHTML()}</div><div class="r-org"><div class="l1">${APP.country}</div><div class="l2">${APP.ministry}</div><div class="l3">${APP.name} (${APP.short})</div></div><div class="r-qr">${qrSvg(qrText, { margin: 3 })}<span>SCAN TO VERIFY</span></div></div><div class="r-flag"><i></i><i></i><i></i></div><div class="r-partners"><span>In partnership with</span><img src="KMUH.jpg" alt="Kaohsiung Medical University Chung-Ho Memorial Hospital logo"><img src="ICDF.jpg" alt="Taiwan ICDF logo"></div>
   <div class="r-title"><div><h2>${h(title)}</h2><div class="r-sub">Report reference <span class="mono">${h(ref)}</span> · generated ${fmtDT(Date.now())}</div></div></div>`;
 }
 
