@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>BHIS — Border Health Information System</title>
-<meta name="description" content="Border Health Information System — Ministry of Health Development, Republic of Somaliland.">
+<title>SHIS — Somaliland Health Information System</title>
+<meta name="description" content="Somaliland Health Information System — Ministry of Health Development, Republic of Somaliland.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 /* ============================================================
-   BHIS demo — styles
+   SHIS demo — styles
    ============================================================ */
 :root {
   --green-900: #072f1b;
@@ -155,6 +155,7 @@ h1, h2, h3, h4 { margin: 0; font-weight: 600; letter-spacing: -.01em; }
 .topbar h1 { font-size: 19px; }
 .topbar-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
 .header-user { color: var(--ink-2); font-size: 12px; white-space: nowrap; }
+@media screen and (max-width: 760px) { .fs-lbl { display: none; } }
 .topbar-right .btn.sm { min-height: 30px; }
 .demo-pill {
   display: inline-flex; align-items: center; gap: 7px;
@@ -166,7 +167,7 @@ h1, h2, h3, h4 { margin: 0; font-weight: 600; letter-spacing: -.01em; }
 .clock { font-size: 12.5px; color: var(--ink-2); text-align: right; line-height: 1.25; white-space: nowrap; }
 .clock strong { display: block; color: var(--ink); font-weight: 600; }
 
-.page { padding: 24px 28px 48px; max-width: 1520px; width: 100%; }
+.page { padding: 24px 28px 48px; max-width: none; width: 100%; }
 .page-intro { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; margin-bottom: 18px; flex-wrap: wrap; }
 .page-intro p { margin: 4px 0 0; color: var(--ink-2); max-width: 70ch; }
 .page-intro h2 { font-size: 22px; }
@@ -1112,6 +1113,7 @@ details.more summary { cursor: pointer; color: var(--green-700); font-size: 13px
       <div class="topbar-right">
         <div class="clock" id="clock"></div>
         <span class="header-user" id="header-user"></span>
+        <button class="btn sm" id="fs-btn" data-act="toggle-fullscreen" title="Full screen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg><span class="fs-lbl">Full screen</span></button>
         <button class="btn sm" data-act="open-verify"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="5" height="5" x="3" y="3" rx="1"/><rect width="5" height="5" x="16" y="3" rx="1"/><rect width="5" height="5" x="3" y="16" rx="1"/><path d="M21 16h-3a2 2 0 0 0-2 2v3"/><path d="M21 21v.01"/><path d="M12 7v3a2 2 0 0 1-2 2H7"/><path d="M3 12h.01"/><path d="M12 3h.01"/><path d="M12 16v.01"/><path d="M16 12h1"/><path d="M21 12v.01"/><path d="M12 21v-1"/></svg><span class="lbl">Verify</span></button>
       </div>
     </header>
@@ -1123,7 +1125,7 @@ details.more summary { cursor: pointer; color: var(--green-700); font-size: 13px
 <div class="modal" id="modal" role="dialog" aria-modal="true"></div>
 <div class="toasts" id="toasts" aria-live="polite"></div>
 <div class="tooltip" id="tooltip" role="tooltip"></div>
-<noscript><p style="padding:20px">BHIS needs JavaScript enabled.</p></noscript>
+<noscript><p style="padding:20px">SHIS needs JavaScript enabled.</p></noscript>
 <script>
 const APP_MODE = 'staff';
 /* QR Code Generator for JavaScript, (c) 2009 Kazuhiko Arase, MIT licence */
@@ -3425,18 +3427,18 @@ var qrcode = function() {
     return qrcode;
 }));
 /* ============================================================
-   BHIS demo — core utilities, icons, formatting
+   SHIS demo — core utilities, icons, formatting
    ============================================================ */
 'use strict';
 
 const DAY = 86400000, HOUR = 3600000, MIN = 60000;
 const APP = {
-  name: 'Border Health Information System',
-  short: 'BHIS',
+  name: 'Somaliland Health Information System',
+  short: 'SHIS',
   ministry: 'Ministry of Health Development',
   country: 'Republic of Somaliland',
   version: 'Version 1.0',
-  storageKey: 'bhis-demo-state-v5',
+  storageKey: 'bhis-demo-state-v7',
   logoKey: 'bhis-demo-logo',
 };
 
@@ -3622,7 +3624,7 @@ function downloadCSV(filename, rows) {
 }
 
 /* ============================================================
-   BHIS demo — fictional dataset, derived figures, alert rules
+   SHIS demo — fictional dataset, derived figures, alert rules
    All names, numbers and documents are invented for demonstration.
    ============================================================ */
 
@@ -3712,8 +3714,8 @@ const DOC_TYPES = ['Passport', 'National ID card', 'Emergency travel document', 
 const SYMPTOMS = ['Fever (≥ 38 °C)', 'Severe headache', 'Fatigue / weakness', 'Muscle or joint pain', 'Sore throat', 'Vomiting', 'Diarrhoea', 'Abdominal pain', 'Loss of appetite', 'Hiccups', 'Rash', 'Unexplained bleeding or bruising'];
 const DANGER_SYMPTOMS = ['Unexplained bleeding or bruising'];
 const SCREEN_QUESTIONS = [
-  { id: 'q1', text: 'In the last 21 days, been in a country or area with an active Ebola outbreak?' },
-  { id: 'q2', text: 'In the last 21 days, had contact with a sick person, a suspected/confirmed Ebola case, or their body fluids?' },
+  { id: 'q1', text: 'In the last 21 days, been in a country or area with an active disease outbreak?' },
+  { id: 'q2', text: 'In the last 21 days, had contact with a sick person, a suspected/confirmed case, or their body fluids?' },
   { id: 'q3', text: 'In the last 21 days, attended a funeral or touched a dead body?' },
   { id: 'q4', text: 'In the last 21 days, cared for patients in a health facility (health worker exposure)?' },
   { id: 'q5', text: 'In the last 21 days, handled bats, monkeys or bushmeat?' },
@@ -3729,10 +3731,13 @@ const REFERRAL_STATUSES = ['Not referred', 'Referral pending', 'Referred — awa
 // WHO: RT-PCR is the reference test; a positive rapid antigen test (RDT) must be confirmed by RT-PCR;
 // if the first sample is taken < 3 days after symptom onset and is negative, repeat ≥ 48 h later.
 const TEST_TYPES = {
-  pcr: { id: 'pcr', builtin: true, active: true, rapid: false, label: 'Ebola RT-PCR (GeneXpert)', short: 'RT-PCR', desc: 'Confirmatory test — WHO reference method', specimen: 'Whole blood (EDTA, ≥ 4 mL)', limitH: 24, confirmatory: true },
-  antigen: { id: 'antigen', builtin: true, active: true, rapid: true, label: 'Ebola rapid antigen test (RDT)', short: 'Rapid test', desc: 'Triage at the station — positives must be confirmed by RT-PCR', specimen: 'Capillary blood (fingerstick)', limitH: 2, confirmatory: false },
-  other_cd: { id: 'other_cd', builtin: true, active: true, rapid: false, label: 'Ebola RT-PCR — repeat test', short: 'Repeat RT-PCR', desc: 'Second sample ≥ 48 h after an early negative', specimen: 'Whole blood (EDTA, ≥ 4 mL)', limitH: 24, confirmatory: true },
-  other_cfg: { id: 'other_cfg', builtin: true, active: true, rapid: false, label: 'Marburg virus RT-PCR', short: 'Marburg RT-PCR', desc: 'Differential diagnosis for viral haemorrhagic fever', specimen: 'Whole blood (EDTA, ≥ 4 mL)', limitH: 48, confirmatory: true },
+  pcr: { id: 'pcr', builtin: true, active: true, rapid: false, label: 'Ebola RT-PCR (GeneXpert)', short: 'RT-PCR', desc: 'Confirmatory test — WHO reference method', specimen: 'Whole blood (EDTA, ≥ 4 mL)', limitH: 24, confirmatory: true, resultType: 'qual', normalRange: 'Not detected' },
+  antigen: { id: 'antigen', builtin: true, active: true, rapid: true, label: 'Ebola rapid antigen test (RDT)', short: 'Rapid test', desc: 'Triage at the station — positives must be confirmed by RT-PCR', specimen: 'Capillary blood (fingerstick)', limitH: 2, confirmatory: false, resultType: 'qual', normalRange: 'Negative' },
+  other_cd: { id: 'other_cd', builtin: true, active: true, rapid: false, label: 'Ebola RT-PCR — repeat test', short: 'Repeat RT-PCR', desc: 'Second sample ≥ 48 h after an early negative', specimen: 'Whole blood (EDTA, ≥ 4 mL)', limitH: 24, confirmatory: true, resultType: 'qual', normalRange: 'Not detected' },
+  other_cfg: { id: 'other_cfg', builtin: true, active: true, rapid: false, label: 'Marburg virus RT-PCR', short: 'Marburg RT-PCR', desc: 'Differential diagnosis for viral haemorrhagic fever', specimen: 'Whole blood (EDTA, ≥ 4 mL)', limitH: 48, confirmatory: true, resultType: 'qual', normalRange: 'Not detected' },
+  malaria: { id: 'malaria', builtin: true, active: true, rapid: false, label: 'Malaria rapid diagnostic test (RDT)', short: 'Malaria RDT', desc: 'Fever work-up at the border', specimen: 'Capillary blood (fingerstick)', limitH: 1, confirmatory: false, resultType: 'qual', normalRange: 'Negative' },
+  hb: { id: 'hb', builtin: true, active: true, rapid: false, label: 'Haemoglobin (Hb)', short: 'Hb', desc: 'Numeric result with normal range', specimen: 'Capillary blood (fingerstick)', limitH: 2, confirmatory: false, resultType: 'num', unit: 'g/dL', refLow: 12, refHigh: 17.5 },
+  glucose: { id: 'glucose', builtin: true, active: true, rapid: false, label: 'Blood glucose (random)', short: 'Glucose', desc: 'Numeric result with normal range', specimen: 'Capillary blood (fingerstick)', limitH: 1, confirmatory: false, resultType: 'num', unit: 'mmol/L', refLow: 3.9, refHigh: 7.8 },
 };
 // Vaccines recorded at points of entry (configurable in Settings)
 const DEFAULT_VACCINES = [
@@ -3753,7 +3758,7 @@ const UNFINISHED = ['Requested', 'Specimen Collected', 'Processing', 'Pending'];
 const RESULTS = ['Positive', 'Negative', 'Inconclusive', 'Invalid', 'Pending'];
 const ALERT_STATUSES = ['Open', 'Acknowledged', 'Assigned', 'In Progress', 'Escalated', 'Resolved'];
 const ALERT_CATS = {
-  pos: { label: 'Confirmed Ebola positive — immediate response', short: 'Confirmed Ebola', priority: 'urgent' },
+  pos: { label: 'Confirmed positive — immediate response', short: 'Confirmed case', priority: 'urgent' },
   pre: { label: 'Rapid test positive or inconclusive — confirm by RT-PCR', short: 'Preliminary positive', priority: 'high' },
   od: { label: 'Overdue laboratory result', short: 'Overdue lab result', priority: 'high' },
   inc: { label: 'Incomplete screening', short: 'Incomplete screening', priority: 'routine' },
@@ -3880,7 +3885,7 @@ function generateSeed(now) {
       const local = st.type === 'Land border' && rnd() < .5 ? st.city : pick(rnd, LOCAL_DEST);
       const fCountry = foreign.split(', ').pop();
       const t = {
-        ref: `BHIS-${st.code}-${yy(now)}-${pad(++seq.trav, 5)}`,
+        ref: `SHIS-${st.code}-${yy(now)}-${pad(++seq.trav, 5)}`,
         name: genName(rnd, N.pool, sex),
         sex, dob, age: null,
         nationality: nat,
@@ -3911,7 +3916,7 @@ function generateSeed(now) {
       const scr = { id: `SCR-${yy(now)}-${pad(++seq.scr, 5)}`, travelerRef: t.ref, station: st.code, at: scrAt, outcome, officer: pick(rnd, st.officers), symptoms: [], answers: {}, temp: null, notes: '', referralStatus: 'Not referred', referralFacility: '' };
       if (outcome === 'clear') { scr.temp = +between(rnd, 36.1, 37.3).toFixed(1); if (rnd() < .05) scr.symptoms = [pick(rnd, ['Fatigue / weakness', 'Sore throat'])]; }
       if (outcome === 'assess') { scr.temp = +between(rnd, 37.4, 38.6).toFixed(1); scr.symptoms = [...new Set(Array.from({ length: intBetween(rnd, 1, 2) }, () => pick(rnd, ['Severe headache', 'Fatigue / weakness', 'Muscle or joint pain', 'Sore throat', 'Diarrhoea'])))]; scr.notes = pick(rnd, ['Elevated temperature on second reading; moved to secondary screening.', 'Travelled through an outbreak-affected country; no fever — rapid test and 21-day follow-up.', 'Mild symptoms; travel companion reported recent illness.']); }
-      if (outcome === 'referred') { scr.temp = +between(rnd, 38.2, 39.6).toFixed(1); scr.symptoms = [...new Set(['Fever (≥ 38 °C)', ...Array.from({ length: intBetween(rnd, 2, 4) }, () => pick(rnd, ['Severe headache', 'Fatigue / weakness', 'Vomiting', 'Diarrhoea', 'Abdominal pain', 'Muscle or joint pain', 'Unexplained bleeding or bruising']))])]; scr.notes = pick(rnd, ['Meets suspected EVD case definition; isolated in station holding room, ambulance requested.', 'Fever with vomiting and diarrhoea after travel through outbreak area; isolated and referred.', 'Fever and contact with a sick relative; transferred to isolation unit with full PPE.']); const ageH = (now - scrAt) / HOUR; scr.referralStatus = ageH > 18 ? pickW(rnd, [['Referred — attended', 72], ['Referred — not attended', 16], ['Referred — awaiting confirmation', 12]]) : pickW(rnd, [['Referred — awaiting confirmation', 70], ['Referred — attended', 30]]); scr.referralFacility = `${st.city === 'Wajaale' || st.city === 'Lawyacado' ? (st.city === 'Wajaale' ? 'Hargeisa' : 'Borama') : st.city} Ebola isolation and treatment unit`; }
+      if (outcome === 'referred') { scr.temp = +between(rnd, 38.2, 39.6).toFixed(1); scr.symptoms = [...new Set(['Fever (≥ 38 °C)', ...Array.from({ length: intBetween(rnd, 2, 4) }, () => pick(rnd, ['Severe headache', 'Fatigue / weakness', 'Vomiting', 'Diarrhoea', 'Abdominal pain', 'Muscle or joint pain', 'Unexplained bleeding or bruising']))])]; scr.notes = pick(rnd, ['Meets suspected EVD case definition; isolated in station holding room, ambulance requested.', 'Fever with vomiting and diarrhoea after travel through outbreak area; isolated and referred.', 'Fever and contact with a sick relative; transferred to isolation unit with full PPE.']); const ageH = (now - scrAt) / HOUR; scr.referralStatus = ageH > 18 ? pickW(rnd, [['Referred — attended', 72], ['Referred — not attended', 16], ['Referred — awaiting confirmation', 12]]) : pickW(rnd, [['Referred — awaiting confirmation', 70], ['Referred — attended', 30]]); scr.referralFacility = `${st.city === 'Wajaale' || st.city === 'Lawyacado' ? (st.city === 'Wajaale' ? 'Hargeisa' : 'Borama') : st.city} isolation and treatment unit`; }
       if (outcome === 'incomplete') { scr.temp = rnd() < .5 ? +between(rnd, 36.2, 37.2).toFixed(1) : null; scr.notes = pick(rnd, ['Traveler declined temperature check.', 'Screening interrupted — traveler transferred to departure gate.', 'Interpreter not available at time of screening.', 'Minor travelling without guardian present; screening paused.', 'Thermal scanner offline; manual check not completed.']); }
       const affected = /Uganda|Congo/.test(t.originCountry);
       SCREEN_QUESTIONS.forEach(q => { scr.answers[q.id] = q.id === 'q1' && affected ? 'Yes' : (outcome === 'assess' || outcome === 'referred') ? (rnd() < (q.id === 'q1' ? .6 : .25) ? 'Yes' : 'No') : (rnd() < .01 ? 'Yes' : 'No'); });
@@ -3951,6 +3956,10 @@ function generateSeed(now) {
 function isUnfinished(t) { return UNFINISHED.includes(t.status); }
 function testAgeH(t, now = Date.now()) { return (now - (t.collectedAt || t.requestedAt)) / HOUR; }
 function isOverdue(t, now = Date.now()) { return isUnfinished(t) && testAgeH(t, now) > ((TEST_TYPES[t.type] || {}).limitH || 24); }
+function testDef(t) { return TEST_TYPES[t && t.type ? t.type : t] || {}; }
+function isNumericTest(t) { return testDef(t).resultType === 'num'; }
+function normalRangeText(t) { const d = testDef(t); if (d.resultType === 'num') { const lo = d.refLow, hi = d.refHigh; const r = lo != null && hi != null ? `${lo} – ${hi}` : lo != null ? `≥ ${lo}` : hi != null ? `≤ ${hi}` : '—'; return `${r}${d.unit ? ' ' + d.unit : ''}`; } return d.normalRange || 'Negative'; }
+function numericFlag(type, v) { const d = testDef(type); if (d.refLow != null && v < d.refLow) return 'Low'; if (d.refHigh != null && v > d.refHigh) return 'High'; return 'Normal'; }
 function isConfirmedPositive(t) { return t.status === 'Completed' && t.result === 'Positive' && !!(TEST_TYPES[t.type] || {}).confirmatory; }
 function isRapid(t) { return !!(TEST_TYPES[t.type] && TEST_TYPES[t.type].rapid); }
 function isPreliminaryFlag(t) { return (t.status === 'Completed' && t.result === 'Positive' && isRapid(t)) || t.result === 'Inconclusive'; }
@@ -3966,7 +3975,8 @@ function resultDisplay(t) {
   if (!t) return { text: 'No test', tone: 'neutral', dot: false };
   if (t.status === 'Cancelled') return { text: 'Cancelled', tone: 'neutral' };
   if (isUnfinished(t)) return { text: 'Pending', tone: 'warn' };
-  if (t.result === 'Positive') return isRapid(t) ? { text: 'Rapid test positive — confirm by RT-PCR', tone: 'warn' } : { text: 'Positive — confirmed', tone: 'crit' };
+  if (t.value != null && isNumericTest(t)) { const d = testDef(t); return { text: `${t.value}${d.unit ? ' ' + d.unit : ''} · ${t.result}`, tone: t.result === 'Normal' ? 'good' : 'warn' }; }
+  if (t.result === 'Positive') return isRapid(t) ? { text: 'Rapid test positive — needs confirmation', tone: 'warn' } : testDef(t).confirmatory ? { text: 'Positive — confirmed', tone: 'crit' } : { text: 'Positive', tone: 'crit' };
   if (t.result === 'Negative') return { text: 'Negative', tone: 'good' };
   if (t.result === 'Inconclusive') return { text: 'Inconclusive — flagged', tone: 'warn' };
   if (t.result === 'Invalid') return { text: 'Invalid', tone: 'neutral' };
@@ -4146,14 +4156,14 @@ function travelHistoryHTML(t) {
   if (!t.travelHistory) return '<span class="muted">Not recorded</span>';
   if (t.travelHistory === 'No') return 'No other countries visited';
   const list = h(t.travelCountries || 'Yes — countries not listed');
-  return AFFECTED_COUNTRIES.some(c => (t.travelCountries || '').toLowerCase().includes(c.toLowerCase())) ? `<b style="color:var(--crit-ink)">${list} (Ebola-affected)</b>` : list;
+  return AFFECTED_COUNTRIES.some(c => (t.travelCountries || '').toLowerCase().includes(c.toLowerCase())) ? `<b style="color:var(--crit-ink)">${list} (outbreak-affected)</b>` : list;
 }
 function verifyFor(t) { return verifyCode([t.ref, t.name, t.docNumber, String(sod(t.regAt))]); }
 function travelerQRPayload(t) {
   const s = screeningStatus(t.ref), lt = latestTest(t.ref);
   const r = lt ? resultDisplay(lt) : null;
   return [
-    'BHIS RECORD VERIFICATION',
+    'SHIS RECORD VERIFICATION',
     'Not a travel health certificate',
     `${APP.ministry}, ${APP.country}`,
     `Ref: ${t.ref}`,
@@ -4230,7 +4240,7 @@ function dailySeries(days, station, now = Date.now()) {
    ============================================================ */
 function nextRef(kind, stationCode) {
   const y = yy(Date.now());
-  if (kind === 'trav') return `BHIS-${stationCode}-${y}-${pad(DB.seq.trav + 1, 5)}`;
+  if (kind === 'trav') return `SHIS-${stationCode}-${y}-${pad(DB.seq.trav + 1, 5)}`;
   if (kind === 'scr') return `SCR-${y}-${pad(DB.seq.scr + 1, 5)}`;
   if (kind === 'lab') return `LAB-${y}-${pad(DB.seq.lab + 1, 5)}`;
   if (kind === 'spc') return `SPC-${stationCode}-${y}-${pad(DB.seq.spc + 1, 5)}`;
@@ -4238,7 +4248,7 @@ function nextRef(kind, stationCode) {
 }
 function audit(text) { DB.audit = DB.audit || []; DB.audit.unshift({ at: Date.now(), by: CURRENT_USER.name, text }); DB.audit = DB.audit.slice(0, 200); }
 function addTraveler(data) {
-  DB.seq.trav++; const ref = `BHIS-${data.station}-${yy(Date.now())}-${pad(DB.seq.trav, 5)}`;
+  DB.seq.trav++; const ref = `SHIS-${data.station}-${yy(Date.now())}-${pad(DB.seq.trav, 5)}`;
   const t = { ...data, ref, regAt: Date.now(), regBy: CURRENT_USER.name, source: 'user' };
   DB.travelers.push(t); audit(`Registered traveler ${ref}`);
   const res = syncAlerts(DB); reindex(); saveState();
@@ -4300,7 +4310,8 @@ function activeVaccines() { return DB.catalog.vaccines.filter(v => v.active !== 
 function vaccineName(id) { const v = DB.catalog.vaccines.find(x => x.id === id); return v ? v.name : id; }
 function addCatalogTest(d) {
   const id = 't' + Date.now().toString(36);
-  const t = { id, builtin: false, active: true, rapid: d.kind === 'rapid', confirmatory: d.kind === 'confirmatory', label: d.label, short: d.label, desc: d.desc || (d.kind === 'rapid' ? 'Rapid test — confirm positives' : d.kind === 'confirmatory' ? 'Confirmatory laboratory test' : 'Additional test'), specimen: d.specimen || 'Whole blood (EDTA, ≥ 4 mL)', limitH: +d.limitH || 24 };
+  const num = d.resultType === 'num';
+  const t = { id, builtin: false, active: true, resultType: num ? 'num' : 'qual', normalRange: num ? '' : (d.normalRange || 'Negative'), unit: num ? (d.unit || '') : '', refLow: num && d.refLow !== '' ? +d.refLow : null, refHigh: num && d.refHigh !== '' ? +d.refHigh : null, rapid: !num && d.kind === 'rapid', confirmatory: !num && d.kind === 'confirmatory', label: d.label, short: d.label, desc: d.desc || (d.kind === 'rapid' ? 'Rapid test — confirm positives' : d.kind === 'confirmatory' ? 'Confirmatory laboratory test' : 'Additional test'), specimen: d.specimen || 'Whole blood (EDTA, ≥ 4 mL)', limitH: +d.limitH || 24 };
   DB.catalog.tests.push(t); applyCatalog(); audit(`Added test ${t.label}`); saveState(); return t;
 }
 function addCatalogVaccine(d) {
@@ -4319,7 +4330,7 @@ function addVaccinations(list) {
 }
 
 /* ============================================================
-   BHIS demo — lightweight SVG charts (no external library)
+   SHIS demo — lightweight SVG charts (no external library)
    ============================================================ */
 const C = {
   crit: '#c53030', warn: '#e09400', good: '#1a8a4c', info: '#2a6fc9', neutral: '#8a948f', green: '#11703f',
@@ -4674,7 +4685,7 @@ function heatHTML(rows, cols, cell) {
 }
 
 /* ============================================================
-   BHIS demo — shell, router, shared components
+   SHIS demo — shell, router, shared components
    ============================================================ */
 const UI = {
   dash: { period: '7d', station: 'all' },
@@ -4964,16 +4975,16 @@ function printReport() {
 
 function embeddedHint(kind) {
   if (!isEmbedded()) return;
-  toast(kind === 'print' ? 'Printing may be blocked in this preview' : 'Downloads may be blocked in this preview', 'Download the BHIS file and open it in Chrome or Edge for printing, PDF and CSV export.', 7000);
+  toast(kind === 'print' ? 'Printing may be blocked in this preview' : 'Downloads may be blocked in this preview', 'Download the SHIS file and open it in Chrome or Edge for printing, PDF and CSV export.', 7000);
 }
 
 /* ---------- Verify & about modals ---------- */
 function openVerify(prefill = '') {
   openModal({
     title: 'Verify a record',
-    sub: 'Enter a registration reference with its verification code, or paste the text read from a BHIS QR code.',
+    sub: 'Enter a registration reference with its verification code, or paste the text read from a SHIS QR code.',
     body: `<form id="verify-form" class="stack" style="gap:12px">
-      ${field('Registration reference or QR text', `<textarea class="textarea" name="vtext" rows="3" placeholder="e.g. BHIS-HGA-26-20511">${h(prefill)}</textarea>`, { span: 12 })}
+      ${field('Registration reference or QR text', `<textarea class="textarea" name="vtext" rows="3" placeholder="e.g. SHIS-HGA-26-20511">${h(prefill)}</textarea>`, { span: 12 })}
       ${field('Verification code', `<input class="input mono" name="vcode" placeholder="XXXX-XXXX" maxlength="9">`, { span: 12, hint: 'Printed under every QR code. Optional if you pasted the full QR text.' })}
       <div id="verify-out"></div>
     </form>`,
@@ -4984,7 +4995,7 @@ ACT['do-verify'] = () => {
   const form = document.getElementById('verify-form');
   const text = form.vtext.value.trim();
   let code = form.vcode.value.trim().toUpperCase();
-  const refM = text.match(/BHIS-[A-Z]{3}-\d{2}-\d{5}/i);
+  const refM = text.match(/SHIS-[A-Z]{3}-\d{2}-\d{5}/i);
   const rptM = text.match(/RPT-\d{2}-\d{5}/i);
   const codeM = text.match(/Verify code:\s*([A-Z0-9]{4}-[A-Z0-9]{4})/i);
   if (!code && codeM) code = codeM[1].toUpperCase();
@@ -4993,10 +5004,10 @@ ACT['do-verify'] = () => {
     out.innerHTML = `<div class="verify-result ok"><h4>${icon('info')}Report reference ${h(rptM[0].toUpperCase())}</h4><p class="small" style="margin:6px 0 0">Report QR codes identify a generated report. Open Results and Reports to regenerate it with the same parameters.</p></div>`;
     return;
   }
-  if (!refM) { out.innerHTML = `<div class="verify-result bad"><h4>${icon('xCircle')}No registration reference found</h4><p class="small" style="margin:6px 0 0">References look like BHIS-HGA-26-12345.</p></div>`; return; }
+  if (!refM) { out.innerHTML = `<div class="verify-result bad"><h4>${icon('xCircle')}No registration reference found</h4><p class="small" style="margin:6px 0 0">References look like SHIS-HGA-26-12345.</p></div>`; return; }
   const ref = refM[0].toUpperCase();
   const t = IDX.byRef.get(ref);
-  if (!t) { out.innerHTML = `<div class="verify-result bad"><h4>${icon('xCircle')}Not found</h4><p class="small" style="margin:6px 0 0">${h(ref)} was not found in BHIS.</p></div>`; return; }
+  if (!t) { out.innerHTML = `<div class="verify-result bad"><h4>${icon('xCircle')}Not found</h4><p class="small" style="margin:6px 0 0">${h(ref)} was not found in SHIS.</p></div>`; return; }
   const expected = verifyFor(t);
   if (code && code !== expected) { out.innerHTML = `<div class="verify-result bad"><h4>${icon('xCircle')}Verification code does not match</h4><p class="small" style="margin:6px 0 0">The reference exists but the code ${h(code)} is not valid for it. The document may have been altered.</p></div>`; return; }
   const lt = latestTest(ref);
@@ -5010,13 +5021,13 @@ function openAbout() {
     title: 'About and settings',
     wide: true,
     sub: `${APP.name} — ${APP.version}`,
-    body: `<div class="disclaimer">${icon('info')}<div>This version runs in the browser with sample data loaded for presentation. Ebola procedures follow WHO guidance on laboratory diagnosis of Ebola virus disease and point-of-entry screening.</div></div>
+    body: `<div class="disclaimer">${icon('info')}<div>This version runs in the browser with sample data loaded for presentation. Screening and laboratory procedures follow WHO guidance for point-of-entry screening and laboratory confirmation. Tests and vaccines can be added in Settings for any outbreak.</div></div>
       <div class="grid g2">
         <div><h4 style="font-size:14px;margin-bottom:6px">How figures are calculated</h4>
           <ul class="small" style="margin:0;padding-left:18px;color:var(--ink-2);line-height:1.6">
             <li><b>Travelers</b> and <b>screening coverage</b>: travelers registered in the selected period; coverage = travelers with a completed screening ÷ travelers registered.</li>
             <li><b>Laboratory status</b>: tests requested in the period, by their current status. A test is <b>overdue</b> when no result is reported within ${TEST_TYPES.antigen.limitH} h (rapid test) or ${TEST_TYPES.pcr.limitH} h (RT-PCR).</li>
-            <li><b>Confirmed Ebola case</b>: a positive Ebola RT-PCR reported in the period. <b>Preliminary</b>: a positive rapid test (RDT) or an inconclusive result — not confirmed until RT-PCR is positive (WHO).</li>
+            <li><b>Confirmed case</b>: a positive confirmatory test (e.g. RT-PCR) reported in the period. <b>Preliminary</b>: a positive rapid test (RDT) or an inconclusive result — not confirmed until RT-PCR is positive (WHO).</li>
             <li><b>Pending</b> tests are never counted as negative.</li>
             <li><b>Alerts</b> are raised automatically from records and counted by the date they were raised.</li>
           </ul></div>
@@ -5045,6 +5056,8 @@ ACT['reset-demo'] = () => {
   });
 };
 ACT['open-verify'] = () => openVerify();
+ACT['toggle-fullscreen'] = () => { try { if (document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen(); } catch (e) { toast('Full screen not available', 'Press F11 to use the whole screen.'); } };
+document.addEventListener('fullscreenchange', () => { const l = document.querySelector('#fs-btn .fs-lbl'); if (l) l.textContent = document.fullscreenElement ? 'Exit full screen' : 'Full screen'; });
 ACT['open-about'] = () => openAbout();
 ACT['close-modal'] = () => closeModal();
 ACT['close-drawer'] = () => { closeDrawer(); if (CURRENT.page === 'records' && CURRENT.params.get('ref')) replaceHash('#/records'); };
@@ -5158,7 +5171,7 @@ PAGES.dashboard = {
       ${kpi({ label: 'Total travelers registered', value: n0(m.travelers.length), sub: `${n0(entries)} entries · ${n0(m.travelers.length - entries)} exits`, tone: 'green', ico: 'users', href: '#/records' })}
       ${kpi({ label: 'Screenings completed', value: n0(m.screenedOk.length), sub: `${m.incompleteRec.length} incomplete · ${m.notScreened.length} not yet screened`, tone: 'green', ico: 'stethoscope', href: '#/screening' })}
       ${kpi({ label: 'Screening coverage', value: m.travelers.length ? m.coverage.toFixed(1) : '—', unit: m.travelers.length ? '%' : '', meter: m.coverage, sub: `Target ${SCREENING_TARGET}% · ${m.coverage >= SCREENING_TARGET ? 'met' : 'not met'}`, tone: m.coverage >= SCREENING_TARGET ? 'green' : 'warn', ico: 'activity', href: '#/stations' })}
-      ${kpi({ label: 'Confirmed Ebola cases', value: n0(m.confirmed.length), sub: `Plus ${m.prelim.length} preliminary flags (not confirmed)`, tone: 'crit', ico: 'flask', href: '#/lab' })}
+      ${kpi({ label: 'Confirmed cases', value: n0(m.confirmed.length), sub: `Plus ${m.prelim.length} preliminary flags (not confirmed)`, tone: 'crit', ico: 'flask', href: '#/lab' })}
       ${kpi({ label: 'Urgent open alerts', value: n0(m.urgentOpen), sub: `${m.active.length} active alerts of all priorities`, tone: 'crit', ico: 'bell', href: '#/alerts?priority=urgent' })}
       ${kpi({ label: 'Pending laboratory results', value: n0(m.pendingAll), sub: `${m.cat.overdue} overdue · ${m.cat.processing} processing · ${m.cat.pending} pending`, tone: 'warn', ico: 'clock', href: '#/lab' })}
     </div>
@@ -5167,11 +5180,11 @@ PAGES.dashboard = {
 
     <div class="grid g2 alert-graphs">
       <div class="card">
-        <div class="card-h"><div><h3><span class="graph-num">1</span> Ebola positive and preliminary results by border station</h3><p>Laboratory results reported in the period</p></div></div>
+        <div class="card-h"><div><h3><span class="graph-num">1</span> Positive and preliminary results by border station</h3><p>Laboratory results reported in the period</p></div></div>
         <div class="card-b">
-          <div class="legend"><span><i style="background:${C.crit}"></i>Confirmed Ebola (RT-PCR)</span><span style="color:${C.warn}"><i class="hatch"></i><span style="color:var(--ink-2)">Preliminary (rapid test positive or inconclusive)</span></span></div>
+          <div class="legend"><span><i style="background:${C.crit}"></i>Confirmed (RT-PCR)</span><span style="color:${C.warn}"><i class="hatch"></i><span style="color:var(--ink-2)">Preliminary (rapid test positive or inconclusive)</span></span></div>
           <div class="chart" id="g1"></div>
-          <div class="chart-note">${icon('info')}<span>Preliminary results are not confirmed Ebola cases until RT-PCR is positive. ${m.confirmed.length} confirmed and ${m.prelim.length} preliminary ${f.station === 'all' ? 'nationally' : 'at this station'}.</span></div>
+          <div class="chart-note">${icon('info')}<span>Preliminary results are not confirmed cases until RT-PCR is positive. ${m.confirmed.length} confirmed and ${m.prelim.length} preliminary ${f.station === 'all' ? 'nationally' : 'at this station'}.</span></div>
         </div>
       </div>
       <div class="card">
@@ -5318,7 +5331,7 @@ PAGES.ministry = {
     return `
     <section class="card min-head">
       <div class="mh-logo">${logoHTML()}</div>
-      <div class="mh-text"><div class="mh-l1">Republic of Somaliland · Ministry of Health Development</div><h2>Ebola border surveillance — ministry overview</h2><div class="mh-l3">${h(periodLabel(f.period))} · ${f.station === 'all' ? `${DB.stations.length} border stations` : h(stationName(f.station))} · updated ${fmtTime(Date.now())}</div></div>
+      <div class="mh-text"><div class="mh-l1">Republic of Somaliland · Ministry of Health Development</div><h2>Border health surveillance — ministry overview</h2><div class="mh-l3">${h(periodLabel(f.period))} · ${f.station === 'all' ? `${DB.stations.length} border stations` : h(stationName(f.station))} · updated ${fmtTime(Date.now())}</div></div>
       <div class="mh-filters no-print">
         ${seg('min-period', f.period, [['today', 'Today'], ['7d', '7 days'], ['30d', '30 days']])}
         <select class="select" data-change="min-station" aria-label="Border station">${stationOptions(f.station)}</select>
@@ -5328,14 +5341,14 @@ PAGES.ministry = {
 
     <div class="mtiles">
       ${tile('Travelers screened at the border', n0(m.travelers.length), `${n0(m.screenedOk.length)} screenings completed`, D.sparkTrav, C.green, 'users', '#/records')}
-      ${tile('Suspected Ebola cases', n0(D.suspected.length), 'Isolated and referred at the border', D.sparkSusp, C.warn, 'stethoscope', '#/screening')}
-      ${tile('Confirmed Ebola cases', n0(m.confirmed.length), `${m.prelim.length} preliminary awaiting RT-PCR`, D.sparkConf, C.crit, 'flask', '#/lab')}
-      ${tile('From Ebola-affected countries', n0(D.affected.length), `${h(AFFECTED_COUNTRIES.join(', '))} · 21-day follow-up`, D.sparkAff, C.info, 'globe', '#/records')}
+      ${tile('Suspected cases', n0(D.suspected.length), 'Isolated and referred at the border', D.sparkSusp, C.warn, 'stethoscope', '#/screening')}
+      ${tile('Confirmed cases', n0(m.confirmed.length), `${m.prelim.length} preliminary awaiting RT-PCR`, D.sparkConf, C.crit, 'flask', '#/lab')}
+      ${tile('From outbreak-affected countries', n0(D.affected.length), `${h(AFFECTED_COUNTRIES.join(', '))} · 21-day follow-up`, D.sparkAff, C.info, 'globe', '#/records')}
     </div>
 
     <div class="grid g2">
       <div class="card"><div class="card-h"><div><h3>Screening outcomes</h3><p>All screenings in the period</p></div></div><div class="card-b donut-b"><div class="chart donut" id="md1"></div><div id="md1-legend"></div></div></div>
-      <div class="card"><div class="card-h"><div><h3>Ebola laboratory results</h3><p>Tests requested in the period</p></div></div><div class="card-b donut-b"><div class="chart donut" id="md2"></div><div id="md2-legend"></div></div></div>
+      <div class="card"><div class="card-h"><div><h3>Laboratory results</h3><p>Tests requested in the period</p></div></div><div class="card-b donut-b"><div class="chart donut" id="md2"></div><div id="md2-legend"></div></div></div>
     </div>
 
     <div class="grid g2 m-gauges" style="margin-top:16px">
@@ -5352,13 +5365,13 @@ PAGES.ministry = {
       <div class="card"><div class="card-h"><div><h3>Daily screening coverage</h3><p>% of registered travelers screened, by station and day</p></div></div><div class="card-b">${ministryHeat(D)}<div class="heat-legend"><span><i style="background:#e07a5f"></i>&lt; 75%</span><span><i style="background:#f0c060"></i>75–84%</span><span><i style="background:#6fbf8f"></i>85–89%</span><span><i style="background:#188a4f"></i>90–94%</span><span><i style="background:#0d5a33"></i>≥ 95%</span></div></div></div>
     </div>
 
-    <div class="section-title"><h3>Ebola case line list</h3><p>Suspected and confirmed cases in the period · names shown as initials</p></div>
+    <div class="section-title"><h3>Case line list</h3><p>Suspected and confirmed cases in the period · names shown as initials</p></div>
     <div class="card"><div class="table-wrap">${lineList.length ? `<table class="tbl cardify"><thead><tr><th class="c-ref">Case</th><th class="c-primary">Classification</th><th>Initials</th><th>Sex / age</th><th>Station</th><th class="hide-md">Coming from</th><th>Date</th><th>Laboratory</th><th class="hide-md">Referral</th></tr></thead><tbody>
       ${lineList.map(c => { const t = IDX.byRef.get(c.ref); const lt = latestTest(c.ref); const sc = c.scr || latestScreening(c.ref); return `<tr class="clickable" data-act="go" data-page="records" data-params='{"ref":"${attr(c.ref)}"}'>
-        <td class="mono">${h(c.ref)}</td><td>${c.confirmed ? badge('Confirmed Ebola', 'crit') : badge('Suspected', 'warn')}</td><td><b>${h(t ? initials(t.name).toUpperCase() : '')}</b></td>
+        <td class="mono">${h(c.ref)}</td><td>${c.confirmed ? badge('Confirmed', 'crit') : badge('Suspected', 'warn')}</td><td><b>${h(t ? initials(t.name).toUpperCase() : '')}</b></td>
         <td>${t ? `${t.sex}, ${travelerAge(t)}` : ''}</td><td>${h(stationName(t ? t.station : ''))}</td><td>${h(t ? t.originCountry : '')}</td><td class="nowrap">${fmtSDT(c.at)}</td>
         <td>${lt ? resultBadge(lt) : badge('No test yet', 'neutral')}</td><td class="small">${sc && sc.outcome === 'referred' ? h(sc.referralStatus.replace('Referred — ', '')) : '—'}</td></tr>`; }).join('')}
-      </tbody></table>` : empty('No suspected or confirmed cases', 'No traveler met the Ebola suspected-case definition in this period.')}</div></div>`;
+      </tbody></table>` : empty('No suspected or confirmed cases', 'No traveler met the suspected-case definition in this period.')}</div></div>`;
   },
   mount() {
     const f = UI.min, D = ministryData(f), m = D.m;
@@ -5376,7 +5389,7 @@ PAGES.ministry = {
     const conf = m.tests.filter(isConfirmedPositive).length, pre = m.tests.filter(isPreliminaryFlag).length;
     const p2 = [
       { label: 'Negative', value: neg, color: C.good },
-      { label: 'Confirmed Ebola (RT-PCR)', value: conf, color: C.crit },
+      { label: 'Confirmed (RT-PCR)', value: conf, color: C.crit },
       { label: 'Preliminary — confirm by RT-PCR', value: pre, color: C.warn },
       { label: 'Awaiting result', value: m.pendingAll, color: C.info },
       { label: 'Invalid or cancelled', value: m.cat.invalid + m.cat.cancelled, color: C.neutral },
@@ -5629,7 +5642,7 @@ PAGES.register = {
             ${field('Phone number', `<input class="input" name="phone" type="tel" inputmode="tel" value="+252 " data-input="reg-lookup">`, { req: true, span: 6, err: 'Enter a phone number with at least 7 digits.' })}
             ${field('Coming from (country)', `<select class="select" name="originCountry">${options(COUNTRY_LIST, FOREIGN_DEFAULT[st] || 'Ethiopia')}</select>`, { req: true, span: 4, hint: '<span id="origin-hint"></span>' })}
             ${field('Going to', `<input class="input" name="destination" list="dest-list" maxlength="60" value="${attr((stObj.city || 'Hargeisa') + ', Somaliland')}"><datalist id="dest-list">${Object.entries(SL_REGIONS).flatMap(([r, towns]) => towns.map(tn => `<option value="${attr(tn)}, Somaliland">${h(r)} region</option>`)).join('')}${COUNTRY_LIST.filter(c => c !== 'Somaliland' && c !== 'Other').map(c => `<option value="${attr(c)}">`).join('')}</datalist>`, { req: true, span: 4, err: 'Enter the destination town or country.' })}
-            ${field('Staying at — hotel or address', `<input class="input" name="stayAddress" maxlength="120" placeholder="e.g. Jee Hotel, Jigjiga Yar, Hargeisa">`, { span: 12, hint: 'Where the traveler can be found for follow-up (hotel, area / district, town). Required for arriving travelers.', err: 'Enter where the traveler will stay (hotel or area).' })}
+            ${field('Staying at — hotel or address', `<input class="input" name="stayAddress" maxlength="120">`, { span: 12, hint: 'Where the traveler can be found for follow-up (hotel, area / district, town). Required for arriving travelers.', err: 'Enter where the traveler will stay (hotel or area).' })}
             <div class="f s12"><label>Travel history — has the traveler visited any other country in the last 6 months?<span class="req" aria-hidden="true">*</span></label>
               <div class="radios"><label class="radio"><input type="radio" name="travelHistory" value="No" data-change="reg-th">No</label><label class="radio"><input type="radio" name="travelHistory" value="Yes" data-change="reg-th">Yes</label></div>
               <span class="err">Answer yes or no.</span></div>
@@ -5653,7 +5666,7 @@ PAGES.register = {
 };
 function originHint(form) {
   const el = document.getElementById('origin-hint'); if (!el) return;
-  el.innerHTML = AFFECTED_COUNTRIES.includes(form.originCountry.value) ? `<b style="color:var(--crit-ink)">Ebola-affected country — exposure questions are required at screening</b>` : '';
+  el.innerHTML = AFFECTED_COUNTRIES.includes(form.originCountry.value) ? `<b style="color:var(--crit-ink)">Outbreak-affected country — exposure questions are required at screening</b>` : '';
 }
 ACT['reg-station'] = el => {
   UI.registerStation = el.value;
@@ -5876,7 +5889,7 @@ ACT['rec-page'] = el => { UI.records.page = +el.dataset.v; refresh(); };
 ACT['rec-sort'] = el => { const k = el.dataset.v; if (UI.records.sort === k) UI.records.dir *= -1; else { UI.records.sort = k; UI.records.dir = k === 'regAt' ? -1 : 1; } refresh(); };
 ACT['rec-csv'] = () => {
   const list = filteredTravelers();
-  downloadCSV(`BHIS-traveler-records-${isoDate(Date.now())}.csv`, [
+  downloadCSV(`SHIS-traveler-records-${isoDate(Date.now())}.csv`, [
     ['Registration ref', 'Name', 'Sex', 'Age', 'Nationality', 'Document type', 'Document number', 'Contact', 'Country of origin', 'Destination', 'Station', 'Direction', 'Transport', 'Registered at', 'Screening status', 'Laboratory status', 'Latest result'],
     ...list.map(t => { const lt = latestTest(t.ref); return [t.ref, t.name, t.sex, travelerAge(t), t.nationality, t.docType, t.docNumber, t.phone, t.originCountry, t.destination, stationName(t.station), t.direction, t.transport, fmtDT(t.regAt), screeningStatus(t.ref).text, labStatusDisplay(lt).text, lt ? resultDisplay(lt).text : '']; }),
   ]);
@@ -5934,7 +5947,7 @@ function openTravelerDrawer(ref, tab) {
           <div style="text-align:center"><div style="width:120px;height:120px;border:1px solid var(--line);border-radius:8px;padding:4px;background:#fff">${qrSvg(travelerQRPayload(t), { margin: 1 })}</div><div class="small muted" style="margin-top:6px">Verification code</div><div class="mono small"><b>${verifyFor(t)}</b></div></div>
         </div></div>
       <div class="card" style="margin-bottom:14px"><div class="card-h"><div><h3>Health screening history</h3><p>${scr.length} record${scr.length === 1 ? '' : 's'}</p></div></div><div class="card-b">${scr.length ? scr.map(screeningCard).join('') : empty('Not screened yet', 'No health screening has been recorded for this traveler.', `<button class="btn sm primary" data-act="go" data-page="screening" data-params='{"ref":"${r}"}'>Start health screening</button>`)}</div></div>
-      <div class="card" style="margin-bottom:14px"><div class="card-h"><div><h3>Laboratory history</h3><p>${tests.length} test${tests.length === 1 ? '' : 's'}</p></div></div>${tests.length ? `<div class="table-wrap"><table class="tbl cardify"><thead><tr><th class="c-primary">Test</th><th>Specimen</th><th>Status</th><th>Result</th><th>Result date</th><th class="c-actions"></th></tr></thead><tbody>${tests.map(x => `<tr><td class="name-cell"><strong>${h(x.testName)}</strong><span class="mono">${h(x.id)}</span></td><td class="small">${h(x.specimenType)}<div class="muted">${x.collectedAt ? fmtDT(x.collectedAt) : 'Not collected'}</div></td><td>${labBadge(x)}</td><td>${resultBadge(x)}</td><td class="small nowrap">${x.resultAt ? fmtDT(x.resultAt) : '—'}</td><td class="right"><button class="btn sm" data-act="lab-edit" data-id="${x.id}">Update</button></td></tr>`).join('')}</tbody></table></div>` : `<div class="card-b">${empty('No laboratory tests', 'Request a test only when screening or surveillance requires it.')}</div>`}</div>
+      <div class="card" style="margin-bottom:14px"><div class="card-h"><div><h3>Laboratory history</h3><p>${tests.length} test${tests.length === 1 ? '' : 's'}</p></div><button class="btn sm primary" data-act="lab-add-ref" data-ref="${attr(ref)}">${icon('plus')}Request tests</button></div>${tests.length ? `<div class="table-wrap"><table class="tbl cardify"><thead><tr><th class="c-primary">Test</th><th>Specimen</th><th>Status</th><th>Result</th><th>Normal range</th><th>Result date</th><th class="c-actions"></th></tr></thead><tbody>${tests.map(x => `<tr><td class="name-cell"><strong>${h(x.testName)}</strong><span class="mono">${h(x.id)}</span></td><td class="small">${h(x.specimenType)}<div class="muted">${x.collectedAt ? fmtDT(x.collectedAt) : 'Not collected'}</div></td><td>${labBadge(x)}</td><td>${resultBadge(x)}</td><td class="small">${h(normalRangeText(x))}</td><td class="small nowrap">${x.resultAt ? fmtDT(x.resultAt) : '—'}</td><td class="right"><button class="btn sm" data-act="lab-edit" data-id="${x.id}">Update</button></td></tr>`).join('')}</tbody></table></div>` : `<div class="card-b">${empty('No laboratory tests', 'Request a test only when screening or surveillance requires it.')}</div>`}</div>
       ${(() => { const vx = IDX.vaxBy.get(ref) || []; return `<div class="card" style="margin-bottom:14px"><div class="card-h"><div><h3>Vaccination</h3><p>${vx.length} record${vx.length === 1 ? '' : 's'}</p></div></div><div class="card-b">${vx.length ? `<div class="yn-list">${vx.map(v => `<div class="yn"><span><b>${h(vaccineName(v.vaccineId))}</b><small>${fmtDT(v.at)} · ${h(v.officer || '')}</small></span>${badge(v.status, v.status === 'Given at border' ? 'info' : v.status === 'Certificate seen' ? 'good' : 'warn')}</div>`).join('')}</div>` : '<div class="small muted">No vaccination recorded.</div>'}</div></div>`; })()}
       ${alerts.length ? `<div class="card" style="margin-bottom:14px"><div class="card-h"><div><h3>Alerts</h3><p>Raised automatically from this traveler’s records</p></div></div><div class="table-wrap"><table class="tbl"><tbody>${alerts.map(a => `<tr class="clickable" data-act="open-alert" data-id="${a.id}"><td class="mono">${a.id}</td><td>${prioTag(a.priority)}</td><td>${h(ALERT_CATS[a.category].short)}</td><td class="small">${fmtDT(a.createdAt)}</td><td>${alertStatusBadge(a.status)}</td></tr>`).join('')}</tbody></table></div></div>` : ''}
       <div class="card" id="drawer-history"><div class="card-h"><div><h3>Activity history</h3><p>Every event for this traveler, newest first</p></div></div><div class="card-b">${travelerTimeline(t)}</div></div>
@@ -6077,7 +6090,7 @@ function suggestOutcome(form) {
   if (isNaN(temp) && !sym.length && !exposures && !fever) return null;
   if (bleeding) return { k: 'referred', why: 'unexplained bleeding is a WHO danger sign' };
   if (fever && exposures) return { k: 'referred', why: 'fever with a possible exposure in the last 21 days' };
-  if (fever && sym.length >= 3) return { k: 'referred', why: 'fever with three or more Ebola symptoms' };
+  if (fever && sym.length >= 3) return { k: 'referred', why: 'fever with three or more listed symptoms' };
   if (fever || exposures || sym.length || temp >= 37.5) return { k: 'assess', why: fever ? 'fever without exposure' : exposures ? 'possible exposure — rapid test and 21-day follow-up' : temp >= 37.5 ? `temperature ${temp.toFixed(1)} °C` : 'symptoms reported' };
   return { k: 'clear', why: 'no fever, symptoms or exposure' };
 }
@@ -6140,20 +6153,24 @@ function resultHint(status, type) {
   if (UNFINISHED.includes(status)) return 'The result is entered when the test is completed. Pending is never shown as negative.';
   if (status === 'Invalid') return 'Invalid sample — collect a new blood sample (WHO: whole blood in EDTA).';
   if (status === 'Cancelled') return 'Cancelled tests have no result.';
-  return type === 'antigen' ? 'A positive rapid test is preliminary and must be confirmed by RT-PCR.' : 'If the sample was taken < 3 days after symptoms began and is negative, repeat RT-PCR after ≥ 48 h (WHO).';
+  return type === 'antigen' ? 'A positive rapid test is preliminary and must be confirmed by RT-PCR.' : (TEST_TYPES[type] || {}).confirmatory ? 'If the sample was taken < 3 days after symptoms began and is negative, repeat RT-PCR after ≥ 48 h (WHO).' : 'Compare the result with the normal range shown.';
 }
 function statusBlock(t) {
   const status = t ? t.status : 'Specimen Collected';
   const list = ['Requested', 'Specimen Collected', 'Processing', 'Completed', 'Invalid', 'Cancelled'];
   if (status === 'Pending') list.splice(3, 0, 'Pending');
   const res = t && t.status === 'Completed' ? t.result : '';
+  const num = t && isNumericTest(t), td = t ? testDef(t) : {};
+  const resultField = num
+    ? `<div class="f s8 result-wrap" ${status === 'Completed' ? '' : 'style="display:none"'}><label>Result value${td.unit ? ' (' + h(td.unit) + ')' : ''}<span class="req">*</span></label><input class="input" type="number" step="any" name="value" value="${t && t.value != null ? t.value : ''}" data-input="lab-num"><span class="hint">Normal range: <b>${h(normalRangeText(t))}</b> <span id="num-flag"></span></span><span class="err">Enter the result value.</span></div>`
+    : null;
   return `
     <div class="f s12"><label>Status<span class="req">*</span></label><div class="chips">${list.map(x => `<label class="chip"><input type="radio" name="status" value="${x}" ${x === status ? 'checked' : ''} data-change="lab-sync"><span>${STATUS_LABEL[x]}</span></label>`).join('')}</div></div>
-    <div class="f s8 result-wrap" ${status === 'Completed' ? '' : 'style="display:none"'}><label>Result<span class="req">*</span></label><div class="chips">
+    ${resultField || `<div class="f s8 result-wrap" ${status === 'Completed' ? '' : 'style="display:none"'}><label>Result<span class="req">*</span> <span class="small muted" style="font-weight:400">· normal: ${h(t ? normalRangeText(t) : 'Negative')}</span></label><div class="chips">
       <label class="chip"><input type="radio" name="result" value="Negative" ${res === 'Negative' ? 'checked' : ''} data-change="lab-sync"><span>Negative</span></label>
       <label class="chip res-pos"><input type="radio" name="result" value="Positive" ${res === 'Positive' ? 'checked' : ''} data-change="lab-sync"><span>Positive</span></label>
       <label class="chip res-inc"><input type="radio" name="result" value="Inconclusive" ${res === 'Inconclusive' ? 'checked' : ''} data-change="lab-sync"><span>Inconclusive</span></label>
-    </div><span class="err">Select the result.</span></div>
+    </div><span class="err">Select the result.</span></div>`}
     <div class="f s4 resultat-wrap" ${['Completed', 'Invalid'].includes(status) ? '' : 'style="display:none"'}><label>Result recorded automatically</label><input class="input lab-date-auto" type="datetime-local" name="resultAt" value="${t && t.resultAt ? isoLocalDT(t.resultAt) : ''}" readonly aria-readonly="true"><span class="hint">Saved with the current date and time when you record the result.</span><span class="err">After collection, not in the future.</span></div>
     <div class="f s12"><span class="hint res-hint">${h(resultHint(status, t ? t.type : 'pcr'))}</span></div>`;
 }
@@ -6162,7 +6179,7 @@ function syncLabForm(form) {
   const type = form.querySelector('[name=type]:checked')?.value || form.dataset.type || 'pcr';
   const result = form.querySelector('[name=result]:checked')?.value || '';
   form.querySelector('.result-wrap').style.display = status === 'Completed' ? '' : 'none';
-  if (status !== 'Completed') form.querySelectorAll('[name=result]').forEach(r => { r.checked = false; });
+  if (status !== 'Completed') { form.querySelectorAll('[name=result]').forEach(r => { r.checked = false; }); if (form.value && form.value.tagName) form.value.value = ''; }
   const needsDate = ['Completed', 'Invalid'].includes(status);
   form.querySelector('.resultat-wrap').style.display = needsDate ? '' : 'none';
   if (needsDate && !form.resultAt.value) form.resultAt.value = isoLocalDT(Date.now());
@@ -6178,9 +6195,10 @@ function syncLabForm(form) {
   if (conf) conf.style.display = type === 'antigen' && status === 'Completed' && result === 'Positive' ? '' : 'none';
 }
 ACT['lab-sync'] = el => syncLabForm(el.closest('form'));
+ACT['lab-num'] = el => { const f = el.closest('form'), o = document.getElementById('num-flag'); if (!o) return; if (el.value === '') { o.textContent = ''; return; } const fl = numericFlag(f.dataset.type, +el.value); o.innerHTML = `· ${badge(fl, fl === 'Normal' ? 'good' : 'warn')}`; };
 ACT['lab-csv'] = () => {
   const list = DB.tests.slice().sort((a, b) => b.requestedAt - a.requestedAt);
-  downloadCSV(`BHIS-laboratory-tests-${isoDate(Date.now())}.csv`, [['Test ref', 'Registration ref', 'Station', 'Test', 'Specimen type', 'Specimen ref', 'Laboratory', 'Requested', 'Collected', 'Status', 'Overdue', 'Result', 'Result classification', 'Result date', 'Laboratory officer', 'Notes'],
+  downloadCSV(`SHIS-laboratory-tests-${isoDate(Date.now())}.csv`, [['Test ref', 'Registration ref', 'Station', 'Test', 'Specimen type', 'Specimen ref', 'Laboratory', 'Requested', 'Collected', 'Status', 'Overdue', 'Result', 'Result classification', 'Result date', 'Laboratory officer', 'Notes'],
     ...list.map(x => [x.id, x.travelerRef, stationName(x.station), x.testName, x.specimenType, x.specimenRef, x.lab, fmtDT(x.requestedAt), x.collectedAt ? fmtDT(x.collectedAt) : '', x.status, isOverdue(x) ? 'Yes' : 'No', x.result || '', resultDisplay(x).text, x.resultAt ? fmtDT(x.resultAt) : '', x.labOfficer, x.notes || ''])]);
   toast('CSV exported', `${n0(list.length)} laboratory tests.`);
 };
@@ -6193,15 +6211,19 @@ function validateLab(form, d, t, test) {
   if (form.collectedAt && !['Requested', 'Cancelled'].includes(status)) {
     if (!collectedAt || collectedAt > Date.now() + 5 * MIN || (t && collectedAt < t.regAt - HOUR)) bad('collectedAt');
   }
-  if (status === 'Completed' && !['Positive', 'Negative', 'Inconclusive'].includes(d.result)) bad('result');
+  const num = test && isNumericTest(test);
+  if (num && status === 'Completed' && (d.value === '' || d.value == null || isNaN(+d.value))) bad('value');
+  if (!num && status === 'Completed' && !['Positive', 'Negative', 'Inconclusive'].includes(d.result)) bad('result');
   let resultAt = null;
   if (['Completed', 'Invalid'].includes(status)) {
     resultAt = parseLocalDT(d.resultAt) || Date.now();
-    if (!resultAt || resultAt > Date.now() + 5 * MIN || (collectedAt && resultAt < collectedAt)) bad('resultAt');
+    if (!resultAt || resultAt > Date.now() + 5 * MIN || (collectedAt && resultAt < collectedAt - MIN)) bad('resultAt');
+    if (resultAt && collectedAt && resultAt < collectedAt) resultAt = collectedAt;
   }
   if (!d.labOfficer) bad('labOfficer');
-  const result = UNFINISHED.includes(status) ? 'Pending' : status === 'Invalid' ? 'Invalid' : status === 'Cancelled' ? null : d.result;
-  return { ok, collectedAt: ['Requested'].includes(status) ? null : collectedAt, resultAt, result };
+  const value = num && status === 'Completed' && d.value !== '' ? +d.value : null;
+  const result = UNFINISHED.includes(status) ? 'Pending' : status === 'Invalid' ? 'Invalid' : status === 'Cancelled' ? null : num ? numericFlag(test.type, value) : d.result;
+  return { ok, collectedAt: ['Requested'].includes(status) ? null : collectedAt, resultAt, result, value };
 }
 function describeAlertChanges(res) {
   const parts = [];
@@ -6234,8 +6256,8 @@ ACT['lab-edit'] = el => {
       ${!x.collectedAt ? field('Specimen collection date and time', `<input class="input" type="datetime-local" name="collectedAt" value="">`, { req: true, span: 6, err: 'Enter when the specimen was collected.' }) : `<div class="f s6"><label>Specimen collected</label><div class="readonly-field" style="font-family:var(--font)">${fmtDT(x.collectedAt)}</div></div>`}
       <div class="f s6"><label>Laboratory</label><div class="readonly-field" style="font-family:var(--font)">${h(x.lab)}</div></div>
       ${statusBlock(x)}
-      <div class="f s12" id="lab-confirm-wrap" style="display:none"><label class="check" style="border-color:#f3d79b;background:var(--warn-bg)"><input type="checkbox" name="confirm" value="yes" checked>Request a confirmatory Ebola RT-PCR now (WHO: rapid test positives must be confirmed)</label></div>
-      ${field('Laboratory officer', `<select class="select" name="labOfficer">${options(LAB_OFFICERS.concat(LAB_OFFICERS.includes(x.labOfficer) ? [] : [x.labOfficer]), x.labOfficer)}</select>`, { req: true, span: 6 })}
+      <div class="f s12" id="lab-confirm-wrap" style="display:none"><label class="check" style="border-color:#f3d79b;background:var(--warn-bg)"><input type="checkbox" name="confirm" value="yes" checked>Request a confirmatory RT-PCR now (WHO: rapid test positives must be confirmed)</label></div>
+      ${field('Laboratory officer', `<select class="select" name="labOfficer">${options(LAB_OFFICERS.concat(!x.labOfficer || LAB_OFFICERS.includes(x.labOfficer) ? [] : [x.labOfficer]), x.labOfficer || LAB_OFFICERS[0])}</select>`, { req: true, span: 6 })}
       ${field('Notes', `<textarea class="textarea" name="notes" maxlength="500">${h(x.notes || '')}</textarea>`, { span: 12 })}
     </div>${isOverdue(x) ? `<div class="suggest" style="margin-top:12px">${icon('alert')}<span>This test is overdue (${testAgeH(x).toFixed(1)} h since collection; limit ${TEST_TYPES[x.type].limitH} h). Entering a result will auto-resolve the overdue alert.</span></div>` : ''}</form>${relatedTravelerTestsHTML(x)}`,
     foot: `<button class="btn" data-act="close-modal">Cancel</button><button class="btn primary" data-act="lab-edit-save">${icon('check')}Save update</button>`,
@@ -6250,10 +6272,10 @@ ACT['lab-edit-save'] = () => {
   const d = formData(form);
   const v = validateLab(form, d, t, x);
   if (!v.ok) { toast('Update not saved', 'Complete the highlighted fields.'); return; }
-  const res = updateTest(x.id, { status: d.status, result: v.result, resultAt: v.resultAt, collectedAt: d.status === 'Requested' ? null : (v.collectedAt || x.collectedAt), labOfficer: d.labOfficer, notes: d.notes });
+  const res = updateTest(x.id, { status: d.status, result: v.result, value: v.value, resultAt: v.resultAt, collectedAt: d.status === 'Requested' ? null : (v.collectedAt || x.collectedAt), labOfficer: d.labOfficer, notes: d.notes });
   let extra = '';
-  if (x.type === 'antigen' && d.status === 'Completed' && v.result === 'Positive' && (d.confirm || []).includes('yes') && !DB.tests.some(y => y.confirmatoryFor === x.id)) {
-    const c = addTest({ travelerRef: x.travelerRef, station: x.station, type: 'pcr', testName: TEST_TYPES.pcr.label, specimenType: TEST_TYPES.pcr.specimen, lab: labsFor(x.station, 'pcr'), requestedAt: Date.now(), collectedAt: null, status: 'Requested', result: 'Pending', resultAt: null, labOfficer: d.labOfficer, requestedBy: CURRENT_USER.name, notes: `Confirmatory Ebola RT-PCR for rapid test ${x.id}.`, confirmatoryFor: x.id });
+  if (x.type === 'antigen' && TEST_TYPES.pcr && d.status === 'Completed' && v.result === 'Positive' && (d.confirm || []).includes('yes') && !DB.tests.some(y => y.confirmatoryFor === x.id)) {
+    const c = addTest({ travelerRef: x.travelerRef, station: x.station, type: 'pcr', testName: TEST_TYPES.pcr.label, specimenType: TEST_TYPES.pcr.specimen, lab: labsFor(x.station, 'pcr'), requestedAt: Date.now(), collectedAt: null, status: 'Requested', result: 'Pending', resultAt: null, labOfficer: d.labOfficer, requestedBy: CURRENT_USER.name, notes: `Confirmatory RT-PCR for rapid test ${x.id}.`, confirmatoryFor: x.id });
     extra = ` Confirmatory RT-PCR ${c.test.id} requested.`;
   }
   closeModal();
@@ -6307,16 +6329,16 @@ function labRow(x) {
   const age = testAgeH(x, now);
   return `<div class="card lab-row ${od ? 'od' : ''}">
     <div class="lr-who"><span class="initials sm">${h(initials(tr ? tr.name : '?'))}</span><div><strong>${h(tr ? tr.name : x.travelerRef)}</strong><span>${h(x.travelerRef)} · ${h(stationName(x.station))}</span></div></div>
-    <div class="lr-test"><strong>${h(x.testName)}</strong><span>${h(x.id)} · requested ${fmtSDT(x.requestedAt)}${waiting ? ` · waiting ${age < 1 ? Math.round(age * 60) + ' min' : age.toFixed(1) + ' h'}` : ''}</span></div>
+    <div class="lr-test"><strong>${h(x.testName)}</strong><span>${h(x.id)} · normal: ${h(normalRangeText(x))} · requested ${fmtSDT(x.requestedAt)}${waiting ? ` · waiting ${age < 1 ? Math.round(age * 60) + ' min' : age.toFixed(1) + ' h'}` : ''}</span></div>
     <div class="lr-state">${waiting ? labBadge(x) : resultBadge(x)}</div>
     <div class="lr-act"><button class="icon-btn" data-act="toggle-menu" title="Test actions" aria-label="Test actions">${icon('more')}</button>
       <div class="menu" role="menu">
         ${waiting ? `
           ${x.status === 'Requested' ? `<button data-act="lab-collect" data-id="${x.id}">${icon('flask')}Record sample taken</button>` : ''}
-          <button data-act="lab-quick" data-id="${x.id}" data-v="Negative">${icon('check')}Record negative result</button>
+          ${isNumericTest(x) ? `<button data-act="lab-edit" data-id="${x.id}">${icon('check')}Enter result value</button>` : `<button data-act="lab-quick" data-id="${x.id}" data-v="Negative">${icon('check')}Record negative result</button>
           <button data-act="lab-quick" data-id="${x.id}" data-v="Positive">${icon('alert')}Record positive result</button>
           <button data-act="lab-quick" data-id="${x.id}" data-v="Inconclusive">${icon('info')}Record inconclusive result</button>
-          <button data-act="lab-edit" data-id="${x.id}">${icon('refresh')}More result options</button>`
+          <button data-act="lab-edit" data-id="${x.id}">${icon('refresh')}More result options</button>`}`
           : `<button data-act="print-traveler" data-ref="${attr(x.travelerRef)}">${icon('printer')}Print traveler record</button><button data-act="lab-edit" data-id="${x.id}">${icon('refresh')}Change result</button>`}
       </div>
     </div></div>`;
@@ -6342,8 +6364,8 @@ function saveQuickResult(x, result) {
   const now = Date.now();
   const res = updateTest(x.id, { status: 'Completed', result, resultAt: now, collectedAt: x.collectedAt || now - 30 * MIN, labOfficer: x.labOfficer || CURRENT_USER.name });
   let extra = '';
-  if (result === 'Positive' && isRapid(x) && !DB.tests.some(y => y.confirmatoryFor === x.id)) {
-    const c = addTest({ travelerRef: x.travelerRef, station: x.station, type: 'pcr', testName: TEST_TYPES.pcr.label, specimenType: TEST_TYPES.pcr.specimen, lab: labsFor(x.station, 'pcr'), requestedAt: now, collectedAt: null, status: 'Requested', result: 'Pending', resultAt: null, labOfficer: '', requestedBy: CURRENT_USER.name, notes: `Confirmatory Ebola RT-PCR for rapid test ${x.id}.`, confirmatoryFor: x.id });
+  if (result === 'Positive' && x.type === 'antigen' && TEST_TYPES.pcr && !DB.tests.some(y => y.confirmatoryFor === x.id)) {
+    const c = addTest({ travelerRef: x.travelerRef, station: x.station, type: 'pcr', testName: TEST_TYPES.pcr.label, specimenType: TEST_TYPES.pcr.specimen, lab: labsFor(x.station, 'pcr'), requestedAt: now, collectedAt: null, status: 'Requested', result: 'Pending', resultAt: null, labOfficer: '', requestedBy: CURRENT_USER.name, notes: `Confirmatory RT-PCR for rapid test ${x.id}.`, confirmatoryFor: x.id });
     extra = ` Confirmatory RT-PCR ${c.test.id} added to the list.`;
   }
   toast(`${x.id}: ${result}`, describeAlertChanges(res) + extra, 6000);
@@ -6352,28 +6374,31 @@ function saveQuickResult(x, result) {
 ACT['lab-quick'] = el => {
   const x = IDX.testById.get(el.dataset.id); if (!x) return;
   const tr = IDX.byRef.get(x.travelerRef);
-  if (el.dataset.v === 'Positive') askConfirm({ title: 'Record a POSITIVE result?', body: `${h(x.testName)} for <b>${h(tr ? tr.name : x.travelerRef)}</b>. ${isRapid(x) ? 'A confirmatory RT-PCR will be requested automatically.' : 'An urgent alert will be raised for the surveillance team.'}`, yes: 'Yes, positive', danger: true }, () => saveQuickResult(x, 'Positive'));
+  if (el.dataset.v === 'Positive') askConfirm({ title: 'Record a POSITIVE result?', body: `${h(x.testName)} for <b>${h(tr ? tr.name : x.travelerRef)}</b>. ${x.type === 'antigen' ? 'A confirmatory RT-PCR will be requested automatically.' : testDef(x).confirmatory ? 'An urgent alert will be raised for the surveillance team.' : 'The result will be saved on the traveler record.'}`, yes: 'Yes, positive', danger: true }, () => saveQuickResult(x, 'Positive'));
   else saveQuickResult(x, el.dataset.v);
 };
 ACT['lab-add'] = (el, e, preRef) => {
   openModal({
-    title: 'Request a test', sub: 'Most tests are requested at screening. Use this for extra or repeat tests.', wide: true,
+    title: 'Request tests', sub: 'Choose one or more tests. Each test shows its normal result.', wide: true,
     body: `<form id="lab-add-form" novalidate><div class="fields">
-      ${field('Traveler', comboHTML('lab-add-trav', preRef || ''), { req: true, span: 12, err: 'Choose a registered traveler.' })}
-      <div class="f s12"><label>Test<span class="req">*</span></label><div class="test-cards compact">${activeTests().map((x, i) => `<label class="test-card"><input type="radio" name="type" value="${x.id}" ${i === 0 ? 'checked' : ''}><span><strong>${h(x.label)}</strong><small>${h(x.desc || '')}</small></span></label>`).join('')}</div></div>
+      ${preRef && IDX.byRef.get(preRef) ? `<div class="f s12"><label>Traveler</label><div class="readonly-field" id="lab-add-trav" data-value="${attr(preRef)}" style="font-family:var(--font)"><b>${h(IDX.byRef.get(preRef).name)}</b> · <span class="mono">${h(preRef)}</span></div></div>` : field('Traveler', comboHTML('lab-add-trav', ''), { req: true, span: 12, err: 'Choose a registered traveler.' })}
+      <div class="f s12"><label>Tests<span class="req">*</span></label><div class="test-cards compact">${activeTests().map((x, i) => `<label class="test-card"><input type="checkbox" name="type" value="${x.id}" ${i === 0 ? 'checked' : ''}><span><strong>${h(x.label)}</strong><small>Normal: ${h(normalRangeText(x.id))} · ${h(x.specimen || '')}</small></span></label>`).join('')}</div></div>
       <div class="f s12"><label class="check" style="border:0;padding:0"><input type="checkbox" name="collected" value="yes" checked>Sample collected now</label></div>
     </div></form>`,
     foot: `<button class="btn" data-act="close-modal">Cancel</button><button class="btn primary" data-act="lab-add-save">${icon('check')}Add to laboratory list</button>`,
   });
-  mountCombo('lab-add-trav', () => {});
+  if (!(preRef && IDX.byRef.get(preRef))) mountCombo('lab-add-trav', () => {});
 };
+ACT['lab-add-ref'] = el => ACT['lab-add'](null, null, el.dataset.ref);
 ACT['lab-add-save'] = () => {
   const form = document.getElementById('lab-add-form'), ref = document.getElementById('lab-add-trav').dataset.value, t = ref && IDX.byRef.get(ref);
   if (!t) { document.getElementById('lab-add-trav').closest('.f').classList.add('invalid'); return; }
-  const d = formData(form), id = d.type, coll = (d.collected || []).includes('yes');
-  const res = addTest({ travelerRef: ref, station: t.station, type: id, testName: TEST_TYPES[id].label, specimenType: TEST_TYPES[id].specimen, lab: labsFor(t.station, id), requestedAt: Date.now(), collectedAt: coll ? Date.now() : null, status: coll ? 'Specimen Collected' : 'Requested', result: 'Pending', resultAt: null, labOfficer: '', requestedBy: CURRENT_USER.name, notes: '', confirmatoryFor: null });
-  closeModal(); UI.lab.date = isoDate(Date.now()); UI.lab.show = 'waiting';
-  toast('Test added', `${res.test.id} — ${TEST_TYPES[id].label} for ${t.name}.`); go('lab');
+  const d = formData(form), ids = Array.isArray(d.type) ? d.type : [d.type].filter(Boolean), coll = (d.collected || []).includes('yes');
+  if (!ids.length) { toast('Choose a test', 'Select at least one test.'); return; }
+  const made = ids.map(id => addTest({ travelerRef: ref, station: t.station, type: id, testName: TEST_TYPES[id].label, specimenType: TEST_TYPES[id].specimen, lab: labsFor(t.station, id), requestedAt: Date.now(), collectedAt: coll ? Date.now() : null, status: coll ? 'Specimen Collected' : 'Requested', result: 'Pending', resultAt: null, labOfficer: '', requestedBy: CURRENT_USER.name, notes: '', confirmatoryFor: null }).test);
+  closeModal();
+  toast(`${made.length} test${made.length > 1 ? 's' : ''} requested`, `${made.map(x => x.testName).join(', ')} for ${t.name}.`);
+  if (document.getElementById('drawer')?.classList.contains('open') && CURRENT.page !== 'lab') { refresh(); openTravelerDrawer(ref); } else { UI.lab.date = isoDate(Date.now()); UI.lab.show = 'waiting'; go('lab'); }
 };
 
 /* ============================================================
@@ -6506,7 +6531,7 @@ ACT['al-save'] = el => {
 };
 ACT['al-csv'] = () => {
   const list = filteredAlerts();
-  downloadCSV(`BHIS-alerts-${isoDate(Date.now())}.csv`, [['Alert ref', 'Priority', 'Category', 'Station', 'Registration ref', 'Created', 'Assigned officer', 'Status', 'Source', 'Latest note'],
+  downloadCSV(`SHIS-alerts-${isoDate(Date.now())}.csv`, [['Alert ref', 'Priority', 'Category', 'Station', 'Registration ref', 'Created', 'Assigned officer', 'Status', 'Source', 'Latest note'],
     ...list.map(a => [a.id, PRIORITY_LABEL[a.priority], ALERT_CATS[a.category].label, stationName(a.station), a.travelerRef, fmtDT(a.createdAt), a.officer, a.status, a.detail, a.notes.length ? a.notes[a.notes.length - 1].text : ''])]);
   toast('CSV exported', `${n0(list.length)} alerts.`);
 };
@@ -6526,7 +6551,7 @@ const MAX_ROWS = 150;
 
 function reportRef(type, keyParts) { return `RPT-${yy(Date.now())}-${pad(hashStr([type, ...keyParts, sod(Date.now())].join('|')) % 100000, 5)}`; }
 function reportQR(title, ref, lines) {
-  return ['BHIS REPORT VERIFICATION', title, `Ref: ${ref}`, ...lines, `Generated: ${fmtDT(Date.now())}`, `Verify code: ${verifyCode([ref, title, String(sod(Date.now()))])}`].join('\n');
+  return ['SHIS REPORT VERIFICATION', title, `Ref: ${ref}`, ...lines, `Generated: ${fmtDT(Date.now())}`, `Verify code: ${verifyCode([ref, title, String(sod(Date.now()))])}`].join('\n');
 }
 function rMeta(items) { return `<dl class="r-meta">${items.map(([k, v]) => `<div><dt>${h(k)}</dt><dd>${v}</dd></div>`).join('')}</dl>`; }
 function rStats(items) { return `<div class="r-stats">${items.map(([v, l]) => `<div><b>${v}</b><span>${h(l)}</span></div>`).join('')}</div>`; }
@@ -6573,14 +6598,14 @@ function buildReport(p) {
       const all = m.tests;
       const rows = list.map(x => { const t = IDX.byRef.get(x.travelerRef); return [`<span class="mono">${h(x.id)}</span>`, `${h(t ? t.name : '')}<br><span class="mono">${h(x.travelerRef)}</span>`, h(stationName(x.station)), `${h(x.testName)}<br><span style="color:#666">${h(x.specimenType)}</span>`, x.collectedAt ? fmtSDT(x.collectedAt) : 'Not collected', h(x.status) + (isOverdue(x) ? ' (overdue)' : ''), `<b>${h(resultDisplay(x).text)}</b>`, x.resultAt ? fmtSDT(x.resultAt) : '—', h(shortLab(x.lab))]; });
       body = `<div class="r-section">Summary — tests requested in the period</div>${rStats([[n0(all.length), 'Tests requested'], [n0(m.cat.completed), 'Completed'], [n0(m.pendingAll), `Awaiting result (${m.cat.overdue} overdue)`], [n0(m.cat.invalid), 'Invalid'], [n0(all.filter(isConfirmedPositive).length), 'Confirmed positive'], [n0(all.filter(isPreliminaryFlag).length), 'Preliminary flags'], [n0(all.filter(t => t.status === 'Completed' && t.result === 'Negative').length), 'Negative'], [n0(m.cat.cancelled), 'Cancelled']])}
-        <p style="font-size:11px;color:#555;margin:8px 0 0">Confirmed = positive Ebola RT-PCR (WHO reference method). Preliminary = positive rapid test or inconclusive result awaiting RT-PCR confirmation. Pending results are not negative.</p>
+        <p style="font-size:11px;color:#555;margin:8px 0 0">Confirmed = positive confirmatory test (RT-PCR) (WHO reference method). Preliminary = positive rapid test or inconclusive result awaiting RT-PCR confirmation. Pending results are not negative.</p>
         <div class="r-section">Test records${rf !== 'all' ? ` — filtered: ${h({ confirmed: 'confirmed positive', prelim: 'preliminary flags', pending: 'awaiting result', negative: 'negative' }[rf])}` : ''}</div>${rTable(['Test', 'Traveler', 'Station', 'Test / specimen', 'Collected', 'Status', 'Result', 'Result date', 'Laboratory'], rows)}`;
       csv = [['Test ref', 'Registration ref', 'Traveler', 'Station', 'Test', 'Specimen type', 'Specimen ref', 'Collected', 'Status', 'Overdue', 'Result', 'Classification', 'Result date', 'Laboratory', 'Officer'], ...list.map(x => { const t = IDX.byRef.get(x.travelerRef); return [x.id, x.travelerRef, t ? t.name : '', stationName(x.station), x.testName, x.specimenType, x.specimenRef, x.collectedAt ? fmtDT(x.collectedAt) : '', x.status, isOverdue(x) ? 'Yes' : 'No', x.result || '', resultDisplay(x).text, x.resultAt ? fmtDT(x.resultAt) : '', x.lab, x.labOfficer]; })];
       meta = list.length;
     }
     ref = reportRef(p.type, [p.period, p.station, p.result || '']);
     qrLines = [`Period: ${periodLabel(p.period)}`, `Station: ${stLabel}`, `Records: ${meta}`];
-    meta = rMeta([['Report reference', `<span class="mono">${ref}</span>`], ['Reporting period', h(periodLabel(p.period))], ['Border station', h(stLabel)], ['Records included', n0(meta)], ['Generated', fmtDT(now)], ['Prepared by', h(prepared)], ['Data source', 'BHIS'], ['Classification', 'Internal — public health']]);
+    meta = rMeta([['Report reference', `<span class="mono">${ref}</span>`], ['Reporting period', h(periodLabel(p.period))], ['Border station', h(stLabel)], ['Records included', n0(meta)], ['Generated', fmtDT(now)], ['Prepared by', h(prepared)], ['Data source', 'SHIS'], ['Classification', 'Internal — public health']]);
   }
 
   if (p.type === 'daily') {
@@ -6630,7 +6655,7 @@ function buildReport(p) {
     title = 'National border health surveillance summary';
     ref = reportRef('national', [p.period]);
     qrLines = [`Period: ${periodLabel(p.period)}`, `Travelers: ${m.travelers.length}`, `Confirmed positive: ${m.confirmed.length}`];
-    meta = rMeta([['Report reference', `<span class="mono">${ref}</span>`], ['Reporting period', h(periodLabel(p.period))], ['Coverage', `${DB.stations.length} border stations`], ['Generated', fmtDT(now)], ['Prepared by', h(prepared)], ['Distribution', 'Ministry directors'], ['Data source', 'BHIS'], ['Classification', 'Internal — public health']]);
+    meta = rMeta([['Report reference', `<span class="mono">${ref}</span>`], ['Reporting period', h(periodLabel(p.period))], ['Coverage', `${DB.stations.length} border stations`], ['Generated', fmtDT(now)], ['Prepared by', h(prepared)], ['Distribution', 'Ministry directors'], ['Data source', 'SHIS'], ['Classification', 'Internal — public health']]);
     body = `<div class="r-section">Key figures</div>${rStats([[n0(m.travelers.length), 'Travelers registered'], [n0(m.screenedOk.length), 'Screenings completed'], [m.coverage.toFixed(1) + '%', 'Screening coverage'], [n0(m.tests.length), 'Laboratory tests requested'], [n0(m.confirmed.length), 'Confirmed positive results'], [n0(m.prelim.length), 'Preliminary flags'], [n0(m.pendingAll), `Pending lab results (${m.cat.overdue} overdue)`], [n0(m.urgentOpen), 'Urgent open alerts']])}
       <div class="r-section">Observations</div><ul style="margin:4px 0;padding-left:18px;line-height:1.6">${obs.map(o => `<li>${h(o)}</li>`).join('')}</ul>
       <div class="r-section">Border station comparison</div>${rTable(['Station', 'Travelers', 'Screened', 'Coverage', 'Tests', 'Pending', 'Confirmed +', 'Preliminary', 'Active alerts'], sb.map(({ station: s, m: x }) => [h(s.name), n0(x.travelers.length), n0(x.screenedOk.length), x.travelers.length ? x.coverage.toFixed(1) + '%' + (x.coverage < SCREENING_TARGET ? ' ▲' : '') : '—', x.tests.length, x.pendingAll, x.confirmed.length, x.prelim.length, x.active.length]).concat([['<b>National</b>', `<b>${n0(m.travelers.length)}</b>`, `<b>${n0(m.screenedOk.length)}</b>`, `<b>${m.coverage.toFixed(1)}%</b>`, `<b>${m.tests.length}</b>`, `<b>${m.pendingAll}</b>`, `<b>${m.confirmed.length}</b>`, `<b>${m.prelim.length}</b>`, `<b>${m.active.length}</b>`]]), [1, 2, 3, 4, 5, 6, 7, 8])}
@@ -6659,7 +6684,7 @@ function buildReport(p) {
         <tr><th>Staying at (address)</th><td>${h(t.stayAddress || 'Not recorded')}</td><th>Travel history (6 months)</th><td>${travelHistoryHTML(t)}</td></tr>
       </tbody></table></div>
       <div class="r-section">Health screening</div>${rTable(['Reference', 'Date and time', 'Temp.', 'Symptoms', 'Outcome', 'Referral', 'Officer'], scr.map(s => [`<span class="mono">${s.id}</span>`, fmtSDT(s.at), s.temp ? s.temp.toFixed(1) + ' °C' : '—', h(s.symptoms.join(', ') || 'None'), h(OUTCOMES[s.outcome].label), s.outcome === 'referred' ? h(s.referralStatus) : '—', h(s.officer)]))}
-      <div class="r-section">Laboratory tests</div>${rTable(['Test', 'Test type', 'Specimen', 'Collected', 'Status', 'Result', 'Result date', 'Laboratory'], tests.map(x => [`<span class="mono">${x.id}</span>`, h(x.testName), h(x.specimenType), x.collectedAt ? fmtSDT(x.collectedAt) : '—', h(x.status), `<b>${h(resultDisplay(x).text)}</b>`, x.resultAt ? fmtSDT(x.resultAt) : '—', h(shortLab(x.lab))]))}
+      <div class="r-section">Laboratory tests</div>${rTable(['Test', 'Test type', 'Specimen', 'Collected', 'Status', 'Result', 'Normal range', 'Result date', 'Laboratory'], tests.map(x => [`<span class="mono">${x.id}</span>`, h(x.testName), h(x.specimenType), x.collectedAt ? fmtSDT(x.collectedAt) : '—', h(x.status), `<b>${h(resultDisplay(x).text)}</b>`, h(normalRangeText(x)), x.resultAt ? fmtSDT(x.resultAt) : '—', h(shortLab(x.lab))]))}
       ${(IDX.vaxBy.get(t.ref) || []).length ? `<div class="r-section">Vaccination</div>${rTable(['Vaccine', 'Status', 'Date', 'Officer'], (IDX.vaxBy.get(t.ref) || []).map(v => [h(vaccineName(v.vaccineId)), h(v.status), fmtSDT(v.at), h(v.officer || '')]))}` : ''}
       ${alerts.length ? `<div class="r-section">Follow-up alerts</div>${rTable(['Alert', 'Category', 'Priority', 'Raised', 'Status'], alerts.map(a => [`<span class="mono">${a.id}</span>`, h(ALERT_CATS[a.category].short), PRIORITY_LABEL[a.priority], fmtSDT(a.createdAt), h(a.status)]))}` : ''}
       <p style="font-size:11px;color:#555;margin-top:14px">This record summarises border health screening and testing. It is not a travel health certificate.</p>
@@ -6719,7 +6744,7 @@ ACT['rpt-p'] = el => { UI.reports[el.dataset.k] = el.value; go('reports', { type
 ACT['rpt-print'] = () => printReport();
 ACT['rpt-csv'] = () => {
   const rep = buildReport(UI.reports); if (!rep) return;
-  downloadCSV(`BHIS-${UI.reports.type}-${rep.ref}.csv`, [[rep.title, rep.ref, `Generated ${fmtDT(Date.now())}`], [], ...rep.csv.map(r => r.map(c => typeof c === 'string' ? txt(c) : c))]);
+  downloadCSV(`SHIS-${UI.reports.type}-${rep.ref}.csv`, [[rep.title, rep.ref, `Generated ${fmtDT(Date.now())}`], [], ...rep.csv.map(r => r.map(c => typeof c === 'string' ? txt(c) : c))]);
   toast('CSV exported', `${rep.title} (${rep.ref}).`);
 };
 
@@ -6840,10 +6865,15 @@ PAGES.settings = {
       <div class="page-intro"><div><h2>Settings</h2><p>Add new tests or vaccines when the Ministry needs them. Switched-off items disappear from screening and the laboratory, but past records are kept.</p></div></div>
       <div class="grid g2">
         <div class="card"><div class="card-h"><div><h3>Laboratory tests</h3><p>${activeTests().length} in use</p></div></div>
-          <div class="cat-list">${DB.catalog.tests.map(t => `<div class="cat-row ${t.active === false ? 'off' : ''}"><div><strong>${h(t.label)}</strong><span>${h(kindLabel(t))} · ${h(t.specimen)} · result within ${t.limitH} h</span></div><button class="btn sm" data-act="cat-toggle" data-kind="test" data-id="${t.id}">${t.active === false ? 'Switch on' : 'Switch off'}</button></div>`).join('')}</div>
+          <div class="cat-list">${DB.catalog.tests.map(t => `<div class="cat-row ${t.active === false ? 'off' : ''}"><div><strong>${h(t.label)}</strong><span>${h(t.resultType === 'num' ? 'Numeric result' : kindLabel(t))} · normal: ${h(normalRangeText(t.id))} · ${h(t.specimen)} · result within ${t.limitH} h</span></div><button class="btn sm" data-act="cat-toggle" data-kind="test" data-id="${t.id}">${t.active === false ? 'Switch on' : 'Switch off'}</button></div>`).join('')}</div>
           <form class="card-b cat-add" id="add-test" novalidate><h4>Add a test</h4><div class="fields">
             ${field('Test name', '<input class="input" name="label" placeholder="e.g. Mpox PCR">', { req: true, span: 12, err: 'Enter the test name.' })}
-            ${field('Type', `<select class="select" name="kind"><option value="confirmatory">Confirmatory (lab)</option><option value="rapid">Rapid test — positives need confirmation</option><option value="other">Other</option></select>`, { span: 6 })}
+            ${field('Result type', `<select class="select" name="resultType" data-change="cat-rtype"><option value="qual">Positive / Negative</option><option value="num">Number (with normal range)</option></select>`, { span: 6 })}
+            <div class="f s6 rt-qual"><label>Type</label><select class="select" name="kind"><option value="confirmatory">Confirmatory (lab)</option><option value="rapid">Rapid test — positives need confirmation</option><option value="other">Other</option></select></div>
+            <div class="f s12 rt-qual"><label>Normal result</label><input class="input" name="normalRange" value="Negative" placeholder="e.g. Negative / Not detected"></div>
+            <div class="f s4 rt-num hidden"><label>Unit</label><input class="input" name="unit" placeholder="e.g. g/dL"></div>
+            <div class="f s4 rt-num hidden"><label>Normal from</label><input class="input" type="number" step="any" name="refLow" placeholder="Lowest normal"></div>
+            <div class="f s4 rt-num hidden"><label>Normal to</label><input class="input" type="number" step="any" name="refHigh" placeholder="Highest normal"></div>
             ${field('Result expected within (hours)', '<input class="input" type="number" name="limitH" min="1" max="240" value="24">', { span: 6 })}
             ${field('Specimen', `<input class="input" name="specimen" list="spec-list" value="Whole blood (EDTA, ≥ 4 mL)"><datalist id="spec-list">${SPECIMEN_TYPES.map(x => `<option value="${attr(x)}">`).join('')}</datalist>`, { span: 12 })}
           </div><button type="button" class="btn primary" data-act="cat-add-test" style="margin-top:12px">${icon('plus')}Add test</button></form>
@@ -6863,9 +6893,11 @@ PAGES.settings = {
   },
 };
 ACT['cat-toggle'] = el => { const x = toggleCatalog(el.dataset.kind, el.dataset.id); toast(`${x.label || x.name} switched ${x.active === false ? 'off' : 'on'}`); refresh(); };
+ACT['cat-rtype'] = el => { const f = el.closest('form'); const num = el.value === 'num'; f.querySelectorAll('.rt-num').forEach(x => x.classList.toggle('hidden', !num)); f.querySelectorAll('.rt-qual').forEach(x => x.classList.toggle('hidden', num)); };
 ACT['cat-add-test'] = () => {
   const form = document.getElementById('add-test'); clearInvalid(form); const d = formData(form);
   if (!d.label) { setInvalid(form, 'label'); return; }
+  if (d.resultType === 'num' && d.refLow === '' && d.refHigh === '') { toast('Normal range needed', 'Enter the lowest and/or highest normal value.'); return; }
   const t = addCatalogTest(d); toast('Test added', `${t.label} is now available at screening and in the laboratory.`); refresh();
 };
 ACT['cat-add-vax'] = () => {
@@ -6875,7 +6907,7 @@ ACT['cat-add-vax'] = () => {
 };
 
 /* ============================================================
-   BHIS demo — start-up
+   SHIS demo — start-up
    ============================================================ */
 (function start() {
   try {
