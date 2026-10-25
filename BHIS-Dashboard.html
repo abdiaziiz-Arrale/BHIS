@@ -529,6 +529,24 @@ table.tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
 .sdash-kpis { grid-template-columns: repeat(5, minmax(0, 1fr)); }
 @media (max-width: 1100px) { .sdash-kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 @media (max-width: 640px) { .sdash-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); } .sdash-actions .btn { flex: 1 1 100%; justify-content: center; } }
+/* ---------------- Somaliland laboratory map ---------------- */
+.lm-body { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(280px, 1fr); gap: 18px; align-items: start; }
+.lm-svg { width: 100%; height: auto; display: block; border-radius: 10px; }
+.lm-sea { fill: #e8f1f7; }
+.lm-land { fill: #f3f6f2; stroke: #9db5a7; stroke-width: 1.5; stroke-linejoin: round; }
+.lm-label { fill: #7d8f86; font-size: 13px; font-style: italic; }
+.lm-town circle { fill: #9aa7a0; } .lm-town text { fill: #5f6f67; font-size: 12px; }
+.lm-st { cursor: pointer; } .lm-st:hover circle:first-of-type { fill-opacity: .3; }
+.lm-n { font-size: 13px; font-weight: 700; fill: var(--ink); paint-order: stroke; stroke: #f3f6f2; stroke-width: 4px; }
+.lm-v { font-size: 12px; fill: var(--ink-2); paint-order: stroke; stroke: #f3f6f2; stroke-width: 4px; }
+.lm-list { display: flex; flex-direction: column; gap: 8px; }
+.lm-row { display: grid; grid-template-columns: 12px minmax(0, 1fr) repeat(4, auto); gap: 10px; align-items: center; text-align: left; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: #fff; cursor: pointer; font: inherit; color: inherit; }
+.lm-row:hover { border-color: var(--green-600); }
+.lm-dot { width: 12px; height: 12px; border-radius: 50%; }
+.lm-name strong { display: block; font-size: 13.5px; } .lm-name small, .lm-nums small { display: block; color: var(--ink-3); font-size: 11px; }
+.lm-nums { text-align: center; min-width: 54px; } .lm-nums b { font-size: 16px; }
+@media screen and (max-width: 1100px) { .lm-body { grid-template-columns: 1fr; } }
+@media screen and (max-width: 560px) { .lm-row { grid-template-columns: 12px minmax(0, 1fr) repeat(2, auto); } .lm-row .lm-nums:nth-of-type(n+3) { display: none; } }
 /* ---------------- Stations ---------------- */
 .station-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; }
 .station-card { text-align: left; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; padding: 14px; cursor: pointer; display: flex; flex-direction: column; gap: 10px; }
@@ -1100,7 +1118,7 @@ details.more summary { cursor: pointer; color: var(--green-700); font-size: 13px
       </div>
     <nav class="nav" id="nav"></nav>
     <div class="sidebar-foot">
-      <div class="partner-strip" aria-label="Partners"><span class="ps-l">In partnership with</span><div class="ps-logos"><img src="KMUH.jpg" alt="Kaohsiung Medical University Chung-Ho Memorial Hospital logo" title="Kaohsiung Medical University Chung-Ho Memorial Hospital"><img src="ICDF.jpg" alt="Taiwan ICDF logo" title="Taiwan ICDF"></div></div>
+      <div class="partner-strip" aria-label="Partners"><div class="ps-logos"><img src="KMUH.jpg" alt="Kaohsiung Medical University Chung-Ho Memorial Hospital logo" title="Kaohsiung Medical University Chung-Ho Memorial Hospital"><img src="ICDF.jpg" alt="Taiwan ICDF logo" title="Taiwan ICDF"></div></div>
       <div class="user-card"><div class="avatar" title="Duty Officer">DO</div></div>
       <div class="foot-actions"><button data-act="open-about" title="About, logo and settings">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><span class="lbl">About &amp; settings</span></button></div>
@@ -5287,7 +5305,7 @@ ACT['open-alert'] = el => { UI.alerts.selected = el.dataset.id; UI.alerts.status
 
 /* ---------- shared report header (also used by dashboard print) ---------- */
 function reportHeaderHTML(title, ref, qrText) {
-  return `<div class="r-head"><div class="r-logo">${reportLogoHTML()}</div><div class="r-org"><div class="l1">${APP.country}</div><div class="l2">${APP.ministry}</div><div class="l3">${APP.name} (${APP.short})</div></div><div class="r-qr">${qrSvg(qrText, { margin: 3 })}<span>SCAN TO VERIFY</span></div></div><div class="r-flag"><i></i><i></i><i></i></div><div class="r-partners"><span>In partnership with</span><img src="KMUH.jpg" alt="Kaohsiung Medical University Chung-Ho Memorial Hospital logo"><img src="ICDF.jpg" alt="Taiwan ICDF logo"></div>
+  return `<div class="r-head"><div class="r-logo">${reportLogoHTML()}</div><div class="r-org"><div class="l1">${APP.country}</div><div class="l2">${APP.ministry}</div><div class="l3">${APP.name} (${APP.short})</div></div><div class="r-qr">${qrSvg(qrText, { margin: 3 })}<span>SCAN TO VERIFY</span></div></div><div class="r-flag"><i></i><i></i><i></i></div><div class="r-partners"><img src="KMUH.jpg" alt="Kaohsiung Medical University Chung-Ho Memorial Hospital logo"><img src="ICDF.jpg" alt="Taiwan ICDF logo"></div>
   <div class="r-title"><div><h2>${h(title)}</h2><div class="r-sub">Report reference <span class="mono">${h(ref)}</span> · generated ${fmtDT(Date.now())}</div></div></div>`;
 }
 
@@ -5295,6 +5313,55 @@ function reportHeaderHTML(title, ref, qrText) {
    Ministry Overview — executive dashboard with a different chart set
    ============================================================ */
 UI.min = { period: '7d', station: 'all' };
+/* ---------- Somaliland map: laboratory results by border station (schematic) ---------- */
+const STATION_COORDS = { HGA: [44.088, 9.518], WAJ: [43.62, 9.61], BBP: [45.01, 10.44] };
+const SL_OUTLINE = [[43.25,11.47],[43.47,11.37],[43.75,11.05],[44.1,10.55],[44.43,10.4],[45.03,10.44],[45.6,10.62],[46.2,10.75],[46.9,10.95],[47.5,11.17],[48.2,11.22],[48.95,11.28],[49.0,10.4],[48.9,9.5],[48.0,8.0],[47.0,8.0],[46.0,8.0],[45.0,8.45],[44.3,9.15],[43.95,9.38],[43.6,9.56],[43.2,9.82],[42.95,10.3],[42.85,10.95],[43.1,11.2]];
+const SL_TOWNS = [['Borama', 43.18, 9.94, 'l'], ['Zeila', 43.47, 11.35], ['Burao', 45.53, 9.52], ['Erigavo', 47.37, 10.62], ['Las Anod', 47.36, 8.48]];
+function slMapXY(lon, lat) { return [((lon - 42.4) / (49.3 - 42.4)) * 700, ((11.75 - lat) / (11.75 - 7.8)) * 400]; }
+function labMapHTML(period, stationFilter) {
+  const rows = stationBreakdown(period).map(({ station: st, m }) => {
+    const neg = m.tests.filter(t => t.status === 'Completed' && t.result === 'Negative').length;
+    return { st, tests: m.tests.length, conf: m.confirmed.length, pre: m.prelim.length, neg, pend: m.pendingAll, xy: STATION_COORDS[st.code] || (st.lon != null ? [st.lon, st.lat] : null) };
+  });
+  const maxT = Math.max(1, ...rows.map(r => r.tests));
+  const outline = SL_OUTLINE.map(([lo, la]) => slMapXY(lo, la).map(v => v.toFixed(1)).join(',')).join(' ');
+  const towns = SL_TOWNS.map(([n, lo, la, pos]) => { const [x, y] = slMapXY(lo, la); return `<g class="lm-town"><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3"/><text x="${(pos === 'l' ? x - 6 : x + 6).toFixed(1)}" y="${(pos === 'l' ? y - 6 : y + 4).toFixed(1)}" text-anchor="${pos === 'l' ? 'end' : 'start'}">${h(n)}</text></g>`; }).join('');
+  const markers = rows.filter(r => r.xy).map(r => {
+    const [x, y] = slMapXY(r.xy[0], r.xy[1]);
+    const rad = 11 + Math.sqrt(r.tests / maxT) * 13;
+    const side = { HGA: 't', WAJ: 'b', BBP: 't' }[r.st.code] || 't';
+    const lx = side === 'r' ? x + rad + 8 : side === 'l' ? x - rad - 8 : x, anchor = side === 'r' ? 'start' : side === 'l' ? 'end' : 'middle';
+    const ny = side === 't' ? y - rad - 22 : side === 'b' ? y + rad + 16 : y - 3, vy = side === 't' ? y - rad - 7 : side === 'b' ? y + rad + 31 : y + 13;
+    const tone = r.conf ? C.crit : r.pre ? C.warn : C.good;
+    const dim = stationFilter && stationFilter !== 'all' && stationFilter !== r.st.code ? ' opacity=".35"' : '';
+    return `<g class="lm-st" data-act="go" data-page="stations" data-params='${JSON.stringify({ station: r.st.code })}'${dim}><title>${h(r.st.name)}: ${r.tests} tests · ${r.conf} confirmed · ${r.pre} preliminary · ${r.neg} negative · ${r.pend} awaiting</title>
+      <circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${rad.toFixed(1)}" fill="${tone}" fill-opacity=".18" stroke="${tone}" stroke-width="2"/>
+      <circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="7" fill="${tone}"/>
+      <text class="lm-n" x="${lx.toFixed(1)}" y="${ny.toFixed(1)}" text-anchor="${anchor}">${h(r.st.name)}</text>
+      <text class="lm-v" x="${lx.toFixed(1)}" y="${vy.toFixed(1)}" text-anchor="${anchor}">${r.tests} tests${r.conf ? ` · ${r.conf} confirmed` : ''}</text></g>`;
+  }).join('');
+  const list = rows.map(r => `<button class="lm-row" data-act="go" data-page="stations" data-params='${JSON.stringify({ station: r.st.code })}'>
+      <span class="lm-dot" style="background:${r.conf ? C.crit : r.pre ? C.warn : C.good}"></span>
+      <span class="lm-name"><strong>${h(r.st.name)}</strong><small>${n0(r.tests)} tests requested</small></span>
+      <span class="lm-nums"><b style="color:var(--crit-ink)">${r.conf}</b><small>confirmed</small></span>
+      <span class="lm-nums"><b style="color:var(--warn-ink)">${r.pre}</b><small>preliminary</small></span>
+      <span class="lm-nums"><b style="color:var(--good-ink)">${r.neg}</b><small>negative</small></span>
+      <span class="lm-nums"><b>${r.pend}</b><small>awaiting</small></span></button>`).join('');
+  return `<div class="card lab-map"><div class="card-h"><div><h3>Laboratory results by border station</h3><p>Map of Somaliland · ${h(PERIODS[period] || periodLabel(period))} · circle size shows the number of tests</p></div></div>
+    <div class="card-b lm-body">
+      <svg class="lm-svg" viewBox="0 0 700 400" role="img" aria-label="Map of Somaliland showing laboratory results at each border station">
+        <rect x="0" y="0" width="700" height="400" class="lm-sea"/>
+        <polygon points="${outline}" class="lm-land"/>
+        <text x="560" y="40" class="lm-label">Gulf of Aden</text><text x="40" y="380" class="lm-label">Ethiopia</text><text x="18" y="70" class="lm-label">Djibouti</text>
+        ${towns}${markers}
+      </svg>
+      <div class="lm-side">
+        <div class="legend" style="margin-bottom:10px"><span><i style="background:${C.crit}"></i>Confirmed positive</span><span><i style="background:${C.warn}"></i>Preliminary only</span><span><i style="background:${C.good}"></i>No positives</span></div>
+        <div class="lm-list">${list}</div>
+        <p class="small muted" style="margin:10px 0 0">Schematic map — boundaries are approximate. Select a station to open its details.</p>
+      </div>
+    </div></div>`;
+}
 function ministryData(f) {
   const now = Date.now();
   const m = computeMetrics(f.period, f.station, now);
@@ -5350,6 +5417,8 @@ PAGES.ministry = {
       <div class="card"><div class="card-h"><div><h3>Screening outcomes</h3><p>All screenings in the period</p></div></div><div class="card-b donut-b"><div class="chart donut" id="md1"></div><div id="md1-legend"></div></div></div>
       <div class="card"><div class="card-h"><div><h3>Laboratory results</h3><p>Tests requested in the period</p></div></div><div class="card-b donut-b"><div class="chart donut" id="md2"></div><div id="md2-legend"></div></div></div>
     </div>
+
+    <div style="margin-top:16px">${labMapHTML(f.period, f.station)}</div>
 
     <div class="grid g2 m-gauges" style="margin-top:16px">
       <div class="card"><div class="card-h"><div><h3>Screening coverage</h3><p>Registered travelers fully screened · target ${SCREENING_TARGET}%</p></div></div><div class="card-b gauge-b"><div class="chart" id="mg1"></div><div class="small muted">${n0(m.screenedOk.length)} of ${n0(m.travelers.length)} travelers</div></div></div>
@@ -6728,7 +6797,6 @@ PAGES.reports = {
         <div class="row"><strong style="font-size:15px">${h(def.title)}</strong><span class="spacer"></span>${rep ? `<button class="btn" data-act="rpt-csv">${icon('download')}Export CSV</button><button class="btn primary" data-act="rpt-print">${icon('printer')}Print / Save as PDF</button>` : ''}</div>
         <div class="paper-wrap">${rep ? `<article class="paper" id="report-paper">
           ${reportHeaderHTML(rep.title, rep.ref, rep.qr)}${rep.meta}${rep.body}
-          <div class="r-foot"><span>${APP.ministry} · ${APP.name} (${APP.short}) ${APP.version}</span><span style="text-align:right">Report ${h(rep.ref)}<br>Verify code ${verifyCode([rep.ref, rep.title, String(sod(Date.now()))])}</span></div>
         </article>` : `<div class="paper">${empty('Select a traveler', 'Search for a traveler in Parameters to generate the individual record.')}</div>`}</div>
       </div>
     </div>`;
@@ -6767,6 +6835,7 @@ PAGES.stations = {
     return `
     <div class="page-intro"><div><h2>Border stations</h2><p>Operational summary for each point of entry. Select a station to see its travelers, screening completion, laboratory workload and alerts.</p></div>
       <div class="row">${seg('st-period', f.period, [['today', 'Today'], ['7d', 'Last 7 days'], ['30d', 'Last 30 days']])}<button class="btn" data-act="st-add">${icon('plus')}Add station</button></div></div>
+    <div style="margin-bottom:18px">${labMapHTML(f.period, f.selected)}</div>
     <div class="station-cards" style="margin-bottom:18px">
       ${sb.map(({ station: st, m: sm }) => { const lowS = sm.travelers.length && sm.coverage < SCREENING_TARGET; const needs = lowS || sm.urgentOpen || sm.cat.overdue; return `<button class="station-card ${st.code === f.selected ? 'on' : ''}" data-act="st-select" data-v="${st.code}">
         <div class="sc-h"><span class="sc-ico">${icon(STATION_ICON[st.type] || 'mapPin')}</span><div style="min-width:0"><strong>${h(st.name)}</strong><span class="sc-type">${h(st.type)} · ${h(st.code)}${st.custom ? ' · added' : ''}</span></div></div>
