@@ -3375,7 +3375,7 @@ const APP = {
   ministry: 'Ministry of Health Development',
   country: 'Republic of Somaliland',
   version: 'Version 1.0',
-  storageKey: 'bhis-demo-state-v3',
+  storageKey: 'bhis-demo-state-v5',
   logoKey: 'bhis-demo-logo',
 };
 
@@ -3569,9 +3569,6 @@ const STATION_SEED = [
   { code: 'HGA', name: 'Hargeisa Airport', type: 'Airport', region: 'Maroodi Jeex', weight: 30, coverage: .955, incomplete: .025, city: 'Hargeisa' },
   { code: 'WAJ', name: 'Wajaale Land Border', type: 'Land border', region: 'Gabiley', weight: 27, coverage: .915, incomplete: .04, city: 'Wajaale' },
   { code: 'BBP', name: 'Berbera Port', type: 'Seaport', region: 'Saaxil', weight: 14, coverage: .94, incomplete: .03, city: 'Berbera' },
-  { code: 'BOR', name: 'Borama Land Border', type: 'Land border', region: 'Awdal', weight: 12, coverage: .855, incomplete: .06, city: 'Borama' },
-  { code: 'LWY', name: 'Lawyacado Land Border', type: 'Land border', region: 'Awdal', weight: 10, coverage: .79, incomplete: .07, city: 'Lawyacado' },
-  { code: 'BBA', name: 'Berbera Airport', type: 'Airport', region: 'Saaxil', weight: 7, coverage: .97, incomplete: .015, city: 'Berbera' },
 ];
 const SCREENING_TARGET = 90; // percent
 
@@ -5278,15 +5275,14 @@ PAGES.ministry = {
       ${tile('From Ebola-affected countries', n0(D.affected.length), `${h(AFFECTED_COUNTRIES.join(', '))} · 21-day follow-up`, D.sparkAff, C.info, 'globe', '#/records')}
     </div>
 
-    <div class="grid g3 m-gauges">
-      <div class="card"><div class="card-h"><div><h3>Screening coverage</h3><p>Registered travelers fully screened · target ${SCREENING_TARGET}%</p></div></div><div class="card-b gauge-b"><div class="chart" id="mg1"></div><div class="small muted">${n0(m.screenedOk.length)} of ${n0(m.travelers.length)} travelers</div></div></div>
-      <div class="card"><div class="card-h"><div><h3>Laboratory results on time</h3><p>RT-PCR within ${TEST_TYPES.pcr.limitH} h, rapid test within ${TEST_TYPES.antigen.limitH} h · target 90%</p></div></div><div class="card-b gauge-b"><div class="chart" id="mg2"></div><div class="small muted">${D.onTime} of ${D.fin.length} results · ${m.cat.overdue} overdue now</div></div></div>
-      <div class="card"><div class="card-h"><div><h3>Alerts closed</h3><p>Alerts raised in the period that are resolved · target 80%</p></div></div><div class="card-b gauge-b"><div class="chart" id="mg3"></div><div class="small muted">${D.resolved} of ${m.alerts.length} alerts · ${m.urgentOpen} urgent open</div></div></div>
-    </div>
-
-    <div class="grid g2" style="margin-top:16px">
+    <div class="grid g2">
       <div class="card"><div class="card-h"><div><h3>Screening outcomes</h3><p>All screenings in the period</p></div></div><div class="card-b donut-b"><div class="chart donut" id="md1"></div><div id="md1-legend"></div></div></div>
       <div class="card"><div class="card-h"><div><h3>Ebola laboratory results</h3><p>Tests requested in the period</p></div></div><div class="card-b donut-b"><div class="chart donut" id="md2"></div><div id="md2-legend"></div></div></div>
+    </div>
+
+    <div class="grid g2 m-gauges" style="margin-top:16px">
+      <div class="card"><div class="card-h"><div><h3>Screening coverage</h3><p>Registered travelers fully screened · target ${SCREENING_TARGET}%</p></div></div><div class="card-b gauge-b"><div class="chart" id="mg1"></div><div class="small muted">${n0(m.screenedOk.length)} of ${n0(m.travelers.length)} travelers</div></div></div>
+      <div class="card"><div class="card-h"><div><h3>Alerts closed</h3><p>Alerts raised in the period that are resolved · target 80%</p></div></div><div class="card-b gauge-b"><div class="chart" id="mg3"></div><div class="small muted">${D.resolved} of ${m.alerts.length} alerts · ${m.urgentOpen} urgent open</div></div></div>
     </div>
 
     <div class="card" style="margin-top:16px"><div class="card-h"><div><h3>Vaccination at the border</h3><p>Records in the period, by vaccine</p></div></div><div class="card-b">${ministryVax(f)}</div></div>
@@ -5309,7 +5305,6 @@ PAGES.ministry = {
   mount() {
     const f = UI.min, D = ministryData(f), m = D.m;
     mountChart(document.getElementById('mg1'), el => chartGauge(el, { value: m.coverage, target: SCREENING_TARGET, label: 'Screening coverage' }));
-    mountChart(document.getElementById('mg2'), el => chartGauge(el, { value: D.fin.length ? pctNum(D.onTime, D.fin.length) : 0, target: 90, label: 'Laboratory results on time' }));
     mountChart(document.getElementById('mg3'), el => chartGauge(el, { value: m.alerts.length ? pctNum(D.resolved, m.alerts.length) : 100, target: 80, label: 'Alerts closed' }));
     const p1 = [
       { label: 'Cleared', value: m.outcomes.clear, color: C.good },
