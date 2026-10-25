@@ -3541,7 +3541,7 @@ const DEFAULT_LOGO = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64
 function logoHTML() {
   let custom = null;
   try { custom = localStorage.getItem(APP.logoKey); } catch (e) { /* storage unavailable */ }
-  return custom ? `<img src="${attr(custom)}" alt="Ministry logo">` : DEFAULT_LOGO;
+  return custom ? `<img src="${attr(custom)}" alt="Ministry logo">` : '<img src="MOHD.jpeg" alt="Ministry of Health Development logo">';
 }
 
 /* ---------- CSV ---------- */
@@ -4962,7 +4962,7 @@ function openAbout() {
             <li><b>Alerts</b> are raised automatically from records and counted by the date they were raised.</li>
           </ul></div>
         <div><h4 style="font-size:14px;margin-bottom:6px">Ministry logo</h4>
-          <div class="logo-drop"><div class="prev">${logoHTML()}</div><div class="stack" style="gap:6px"><span class="small muted">Replace the placeholder emblem with the official logo (PNG, JPG or SVG). It is stored only in this browser.</span><div class="row"><label class="btn sm">${icon('upload')}Upload logo<input type="file" accept="image/*" id="logo-input" hidden></label><button class="btn sm ghost" data-act="logo-reset">Use placeholder</button></div></div></div>
+          <div class="logo-drop"><div class="prev">${logoHTML()}</div><div class="stack" style="gap:6px"><span class="small muted">The official MOHD logo is used by default. You may upload another logo (PNG, JPG or SVG); it is stored only in this browser.</span><div class="row"><label class="btn sm">${icon('upload')}Upload logo<input type="file" accept="image/*" id="logo-input" hidden></label><button class="btn sm ghost" data-act="logo-reset">Use placeholder</button></div></div></div>
           <h4 style="font-size:14px;margin:16px 0 6px">Sample data</h4>
           <p class="small muted" style="margin:0 0 8px">Changes are saved in this browser (${STORAGE_OK ? `${(used / 1048576).toFixed(1)} MB used` : 'storage unavailable — changes last until the page is closed'}). Resetting reloads the sample data for the last 30 days.</p>
           <button class="btn sm danger" data-act="reset-demo">${icon('refresh')}Reset sample data</button>
@@ -4979,7 +4979,7 @@ function openAbout() {
     r.readAsDataURL(f);
   });
 }
-ACT['logo-reset'] = () => { try { localStorage.removeItem(APP.logoKey); } catch (e) { /* ignore */ } closeModal(); refresh(); toast('Placeholder emblem restored'); };
+ACT['logo-reset'] = () => { try { localStorage.removeItem(APP.logoKey); } catch (e) { /* ignore */ } closeModal(); refresh(); toast('Official MOHD logo restored'); };
 ACT['reset-demo'] = () => {
   askConfirm({ title: 'Reset sample data?', body: 'Travelers, screenings, tests and alert updates you added will be removed and the sample data reloaded.', yes: 'Reset sample data', danger: true }, () => {
     resetState(); toast('Sample data reset', 'The sample data has been reloaded.'); go(HOME);
