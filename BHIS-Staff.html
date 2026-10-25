@@ -514,6 +514,14 @@ table.tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
 .choice.primary-choice .c-ico { background: rgba(255,255,255,.16); color: #fff; }
 .choice.primary-choice span { color: #cfe9da; }
 
+/* ---------------- Staff dashboard ---------------- */
+.sdash-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 18px 20px; flex-wrap: wrap; }
+.sdash-head h2 { margin: 2px 0; font-size: 20px; }
+.sdash-filters { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.sdash-actions { display: flex; gap: 10px; flex-wrap: wrap; margin: 16px 0; }
+.sdash-kpis { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+@media (max-width: 1100px) { .sdash-kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .sdash-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); } .sdash-actions .btn { flex: 1 1 100%; justify-content: center; } }
 /* ---------------- Stations ---------------- */
 .station-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; }
 .station-card { text-align: left; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; padding: 14px; cursor: pointer; display: flex; flex-direction: column; gap: 10px; }
@@ -3420,7 +3428,7 @@ const APP = {
   ministry: 'Ministry of Health Development',
   country: 'Republic of Somaliland',
   version: 'Version 1.0',
-  storageKey: 'bhis-demo-state-v3',
+  storageKey: 'bhis-demo-state-v5',
   logoKey: 'bhis-demo-logo',
 };
 
@@ -3614,9 +3622,6 @@ const STATION_SEED = [
   { code: 'HGA', name: 'Hargeisa Airport', type: 'Airport', region: 'Maroodi Jeex', weight: 30, coverage: .955, incomplete: .025, city: 'Hargeisa' },
   { code: 'WAJ', name: 'Wajaale Land Border', type: 'Land border', region: 'Gabiley', weight: 27, coverage: .915, incomplete: .04, city: 'Wajaale' },
   { code: 'BBP', name: 'Berbera Port', type: 'Seaport', region: 'Saaxil', weight: 14, coverage: .94, incomplete: .03, city: 'Berbera' },
-  { code: 'BOR', name: 'Borama Land Border', type: 'Land border', region: 'Awdal', weight: 12, coverage: .855, incomplete: .06, city: 'Borama' },
-  { code: 'LWY', name: 'Lawyacado Land Border', type: 'Land border', region: 'Awdal', weight: 10, coverage: .79, incomplete: .07, city: 'Lawyacado' },
-  { code: 'BBA', name: 'Berbera Airport', type: 'Airport', region: 'Saaxil', weight: 7, coverage: .97, incomplete: .015, city: 'Berbera' },
 ];
 const SCREENING_TARGET = 90; // percent
 
@@ -4670,6 +4675,7 @@ const UI = {
 
 const NAV_SETS = {
   staff: [
+    { id: 'sdash', label: 'My Dashboard', icon: 'dashboard' },
     { id: 'records', label: 'Travelers', icon: 'users' },
     { id: 'screening', label: 'Screening', icon: 'stethoscope' },
     { id: 'lab', label: 'Laboratory', icon: 'flask' },
@@ -5313,15 +5319,14 @@ PAGES.ministry = {
       ${tile('From Ebola-affected countries', n0(D.affected.length), `${h(AFFECTED_COUNTRIES.join(', '))} · 21-day follow-up`, D.sparkAff, C.info, 'globe', '#/records')}
     </div>
 
-    <div class="grid g3 m-gauges">
-      <div class="card"><div class="card-h"><div><h3>Screening coverage</h3><p>Registered travelers fully screened · target ${SCREENING_TARGET}%</p></div></div><div class="card-b gauge-b"><div class="chart" id="mg1"></div><div class="small muted">${n0(m.screenedOk.length)} of ${n0(m.travelers.length)} travelers</div></div></div>
-      <div class="card"><div class="card-h"><div><h3>Laboratory results on time</h3><p>RT-PCR within ${TEST_TYPES.pcr.limitH} h, rapid test within ${TEST_TYPES.antigen.limitH} h · target 90%</p></div></div><div class="card-b gauge-b"><div class="chart" id="mg2"></div><div class="small muted">${D.onTime} of ${D.fin.length} results · ${m.cat.overdue} overdue now</div></div></div>
-      <div class="card"><div class="card-h"><div><h3>Alerts closed</h3><p>Alerts raised in the period that are resolved · target 80%</p></div></div><div class="card-b gauge-b"><div class="chart" id="mg3"></div><div class="small muted">${D.resolved} of ${m.alerts.length} alerts · ${m.urgentOpen} urgent open</div></div></div>
-    </div>
-
-    <div class="grid g2" style="margin-top:16px">
+    <div class="grid g2">
       <div class="card"><div class="card-h"><div><h3>Screening outcomes</h3><p>All screenings in the period</p></div></div><div class="card-b donut-b"><div class="chart donut" id="md1"></div><div id="md1-legend"></div></div></div>
       <div class="card"><div class="card-h"><div><h3>Ebola laboratory results</h3><p>Tests requested in the period</p></div></div><div class="card-b donut-b"><div class="chart donut" id="md2"></div><div id="md2-legend"></div></div></div>
+    </div>
+
+    <div class="grid g2 m-gauges" style="margin-top:16px">
+      <div class="card"><div class="card-h"><div><h3>Screening coverage</h3><p>Registered travelers fully screened · target ${SCREENING_TARGET}%</p></div></div><div class="card-b gauge-b"><div class="chart" id="mg1"></div><div class="small muted">${n0(m.screenedOk.length)} of ${n0(m.travelers.length)} travelers</div></div></div>
+      <div class="card"><div class="card-h"><div><h3>Alerts closed</h3><p>Alerts raised in the period that are resolved · target 80%</p></div></div><div class="card-b gauge-b"><div class="chart" id="mg3"></div><div class="small muted">${D.resolved} of ${m.alerts.length} alerts · ${m.urgentOpen} urgent open</div></div></div>
     </div>
 
     <div class="card" style="margin-top:16px"><div class="card-h"><div><h3>Vaccination at the border</h3><p>Records in the period, by vaccine</p></div></div><div class="card-b">${ministryVax(f)}</div></div>
@@ -5344,7 +5349,6 @@ PAGES.ministry = {
   mount() {
     const f = UI.min, D = ministryData(f), m = D.m;
     mountChart(document.getElementById('mg1'), el => chartGauge(el, { value: m.coverage, target: SCREENING_TARGET, label: 'Screening coverage' }));
-    mountChart(document.getElementById('mg2'), el => chartGauge(el, { value: D.fin.length ? pctNum(D.onTime, D.fin.length) : 0, target: 90, label: 'Laboratory results on time' }));
     mountChart(document.getElementById('mg3'), el => chartGauge(el, { value: m.alerts.length ? pctNum(D.resolved, m.alerts.length) : 100, target: 80, label: 'Alerts closed' }));
     const p1 = [
       { label: 'Cleared', value: m.outcomes.clear, color: C.good },
@@ -5504,6 +5508,78 @@ function registerTravelerListHTML() {
         <td class="right"><div class="actions"><button class="btn sm primary" data-act="go" data-page="screening" data-params='{"ref":"${attr(t.ref)}"}'>${icon('stethoscope')}Screen</button><a class="btn sm" href="#/records?ref=${encodeURIComponent(t.ref)}">${icon('eye')}View</a></div></td></tr>`).join('')}
     </tbody></table>${pager(f, list.length, PER_PAGE, 'reg-list-page')}` : empty('No travelers match', 'Change the filters or register someone using the form above.')}</div></div></div>`;
 }
+/* ============================================================
+   Staff dashboard — a small overview of the officer's shift
+   ============================================================ */
+UI.sdash = { period: 'today', station: 'all' };
+PAGES.sdash = {
+  title: 'My Dashboard',
+  render() {
+    const f = UI.sdash;
+    if (f.station !== 'all' && !IDX.stByCode.get(f.station)) f.station = 'all';
+    const m = computeMetrics(f.period, f.station);
+    const sMatch = c => f.station === 'all' || c === f.station;
+    const waiting = m.travelers.filter(t => !hasCompletedScreening(t.ref)).sort((a, b) => b.regAt - a.regAt);
+    const suspected = m.screenings.filter(s => s.outcome === 'referred');
+    const openTests = DB.tests.filter(t => isUnfinished(t) && sMatch(t.station));
+    const overdue = openTests.filter(t => isOverdue(t));
+    const recentRes = DB.tests.filter(t => t.status === 'Completed' && t.resultAt >= m.start && sMatch(t.station)).sort((a, b) => b.resultAt - a.resultAt).slice(0, 6);
+    const stLabel = f.station === 'all' ? `${DB.stations.length} border stations` : stationName(f.station);
+    const qRow = t => { const aff = AFFECTED_COUNTRIES.includes(t.originCountry); return `<button class="q-row" data-act="go" data-page="screening" data-params='{"ref":"${attr(t.ref)}"}'>
+      <span class="initials sm">${h(initials(t.name))}</span>
+      <span class="q-main"><strong>${h(t.name)}</strong><span>${h(t.ref)} · ${h(stationName(t.station))} · ${fmtTime(t.regAt)}${aff ? ` · <b style="color:var(--crit-ink)">from ${h(t.originCountry)}</b>` : ''}</span></span>
+      ${scrBadge(t.ref)}<span class="q-go">${icon('chevRight')}</span></button>`; };
+    const resRow = t => { const tr = IDX.byRef.get(t.travelerRef); return `<a class="q-row" href="#/records?ref=${encodeURIComponent(t.travelerRef)}" style="text-decoration:none;color:inherit">
+      <span class="initials sm">${h(tr ? initials(tr.name) : '?')}</span>
+      <span class="q-main"><strong>${h(tr ? tr.name : t.travelerRef)}</strong><span>${h(t.testName || '')} · ${fmtSDT(t.resultAt)}</span></span>
+      ${resultBadge(t)}<span class="q-go">${icon('chevRight')}</span></a>`; };
+    return `
+    <section class="card sdash-head">
+      <div><div class="small muted">Welcome back, ${h(CURRENT_USER.name)}</div><h2>My shift at a glance</h2><div class="small muted">${h(periodLabel(f.period))} · ${h(stLabel)}</div></div>
+      <div class="sdash-filters">
+        ${seg('sdash-period', f.period, [['today', 'Today'], ['7d', '7 days']])}
+        <select class="select" data-change="sdash-station" aria-label="Border station">${stationOptions(f.station)}</select>
+      </div>
+    </section>
+
+    <div class="sdash-actions">
+      <a class="btn primary" href="#/register">${icon('userPlus')}Register traveler</a>
+      <a class="btn" href="#/screening">${icon('stethoscope')}Screen a traveler</a>
+      <a class="btn" href="#/lab">${icon('flask')}Laboratory</a>
+    </div>
+
+    <div class="kpis sdash-kpis">
+      ${kpi({ label: 'Travelers registered', value: n0(m.travelers.length), sub: `${n0(m.travelers.filter(t => t.direction === 'Entry').length)} entries · ${n0(m.travelers.filter(t => t.direction !== 'Entry').length)} exits`, tone: 'green', ico: 'users', href: '#/records' })}
+      ${kpi({ label: 'Waiting for screening', value: n0(waiting.length), sub: 'Registered, not yet screened', tone: waiting.length ? 'warn' : 'green', ico: 'clock', href: '#/screening' })}
+      ${kpi({ label: 'Screenings completed', value: n0(m.screenedOk.length), sub: `Coverage ${m.travelers.length ? m.coverage.toFixed(1) + '%' : '—'}`, tone: 'green', ico: 'stethoscope', href: '#/screening' })}
+      ${kpi({ label: 'Suspected cases', value: n0(suspected.length), sub: 'Isolated and referred', tone: suspected.length ? 'crit' : 'green', ico: 'alert', href: '#/screening' })}
+      ${kpi({ label: 'Lab tests pending', value: n0(openTests.length), sub: `${overdue.length} overdue`, tone: overdue.length ? 'warn' : 'green', ico: 'flask', href: '#/lab' })}
+    </div>
+
+    <div class="grid g2" style="margin-top:16px">
+      <div class="card"><div class="card-h"><div><h3>Screening outcomes</h3><p>Screenings in the period</p></div></div><div class="card-b donut-b"><div class="chart donut" id="sd1"></div><div id="sd1-legend"></div></div></div>
+      <div class="card"><div class="card-h"><div><h3>Waiting for screening</h3><p>${n0(waiting.length)} traveler${waiting.length === 1 ? '' : 's'} · newest first</p></div><a class="btn sm" href="#/screening">Open queue</a></div>
+        <div class="q-list">${waiting.length ? waiting.slice(0, 6).map(qRow).join('') : `<div class="card-b">${empty('Nobody is waiting', 'Every registered traveler in this period has been screened.')}</div>`}</div></div>
+    </div>
+
+    <div class="card" style="margin-top:16px"><div class="card-h"><div><h3>Latest laboratory results</h3><p>Results reported in the period</p></div><a class="btn sm" href="#/lab">All tests</a></div>
+      <div class="q-list">${recentRes.length ? recentRes.map(resRow).join('') : `<div class="card-b">${empty('No results yet', 'No laboratory results were reported in this period.')}</div>`}</div></div>`;
+  },
+  mount() {
+    const f = UI.sdash, m = computeMetrics(f.period, f.station);
+    const p = [
+      { label: 'Cleared', value: m.outcomes.clear, color: C.good },
+      { label: 'Secondary screening', value: m.outcomes.assess, color: C.warn },
+      { label: 'Suspected case — isolated', value: m.outcomes.referred, color: C.crit },
+      { label: 'Incomplete', value: m.outcomes.incomplete, color: C.neutral },
+    ];
+    mountChart(document.getElementById('sd1'), el => chartDonut(el, { parts: p, centerValue: n0(m.screenings.length), centerLabel: 'screenings', label: 'Screening outcomes' }));
+    document.getElementById('sd1-legend').innerHTML = donutLegend(p);
+  },
+};
+ACT['sdash-period'] = el => { UI.sdash.period = el.dataset.v; refresh(); };
+ACT['sdash-station'] = el => { UI.sdash.station = el.value; refresh(); };
+
 PAGES.register = {
   title: 'Traveler Registration',
   render(params) {
