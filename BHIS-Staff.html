@@ -4800,7 +4800,6 @@ const NAV_SETS = {
   ],
   dashboard: [
     { id: 'ministry', label: 'Ministry Overview', icon: 'building' },
-    { id: 'dashboard', label: 'National Dashboard', icon: 'dashboard' },
     { id: 'alerts', label: 'Alerts and Follow-up', icon: 'bell' },
     { id: 'stations', label: 'Border Stations', icon: 'mapPin' },
     { id: 'reports', label: 'Reports', icon: 'fileText' },
@@ -7027,7 +7026,7 @@ PAGES.stations = {
     <div class="card" style="margin-bottom:16px"><div class="card-b station-head" style="display:flex;gap:12px 16px;align-items:center;flex-wrap:wrap">
       <span class="sc-ico" style="width:46px;height:46px;border-radius:10px;background:var(--green-100);color:var(--green-700);display:grid;place-items:center">${icon(STATION_ICON[s.type] || 'mapPin')}</span>
       <div style="flex:1;min-width:220px"><h3 style="font-size:19px">${h(s.name)}</h3><div class="muted">${h(s.type)} · ${h(s.region)} region · station code ${h(s.code)} · ${h(periodLabel(f.period))}</div></div>
-      <button class="btn" data-act="st-dash" data-v="${s.code}">${icon('dashboard')}Show on dashboard</button>
+      <button class="btn" data-act="st-dash" data-v="${s.code}">${icon('building')}Show on Ministry Overview</button>
       <button class="btn" data-act="go" data-page="reports" data-params='${JSON.stringify({ type: 'daily', station: s.code })}'>${icon('fileText')}Daily station summary</button>
       <button class="btn primary" data-act="go" data-page="register" data-params='${JSON.stringify({ station: s.code })}'>${icon('userPlus')}Register traveler here</button>
     </div></div>
@@ -7076,7 +7075,7 @@ PAGES.stations = {
 };
 ACT['st-period'] = el => { UI.stations.period = el.dataset.v; refresh(); };
 ACT['st-select'] = el => { UI.stations.selected = el.dataset.v; go('stations', { station: el.dataset.v }); };
-ACT['st-dash'] = el => { UI.dash.station = el.dataset.v; UI.dash.period = UI.stations.period; go('dashboard'); };
+ACT['st-dash'] = el => { UI.min.station = el.dataset.v; if (['today', '7d', '30d'].includes(UI.stations.period)) UI.min.period = UI.stations.period; go('ministry'); };
 ACT['st-add'] = () => {
   openModal({
     title: 'Add a border station',
