@@ -3496,7 +3496,7 @@ const APP = {
   ministry: 'Ministry of Health Development',
   country: 'Republic of Somaliland',
   version: 'Version 1.0',
-  storageKey: 'bhis-demo-state-v8',
+  storageKey: 'bhis-demo-state-v9',
   logoKey: 'bhis-demo-logo',
 };
 
@@ -3767,7 +3767,7 @@ const TRANSPORT_BY_TYPE = {
   'Land border': [['Bus', 30], ['Minibus', 22], ['Truck (cargo)', 20], ['Private vehicle', 16], ['On foot', 12]],
 };
 const TRANSPORT_LIST = ['Air — commercial flight', 'Air — charter flight', 'Sea — cargo vessel crew', 'Sea — passenger vessel', 'Sea — dhow', 'Bus', 'Minibus', 'Truck (cargo)', 'Private vehicle', 'On foot'];
-const DOC_TYPES = ['Passport', 'National ID card', 'Emergency travel document', 'Laissez-passer', 'Seafarer identity document'];
+const DOC_TYPES = ['Passport', 'National ID card', 'Emergency travel document'];
 
 // Ebola virus disease (EVD) — symptoms and exposure questions used at points of entry (WHO guidance)
 const SYMPTOMS = ['Fever (≥ 38 °C)', 'Severe headache', 'Fatigue / weakness', 'Muscle or joint pain', 'Sore throat', 'Vomiting', 'Diarrhoea', 'Abdominal pain', 'Loss of appetite', 'Hiccups', 'Rash', 'Unexplained bleeding or bruising'];
@@ -3952,7 +3952,7 @@ function generateSeed(now) {
         name: genName(rnd, N.pool, sex),
         sex, dob, age: null,
         nationality: nat,
-        docType: st.type === 'Seaport' && rnd() < .35 ? 'Seafarer identity document' : st.type === 'Land border' && rnd() < .18 ? 'National ID card' : 'Passport',
+        docType: st.type === 'Seaport' && rnd() < .35 ? 'Passport' : st.type === 'Land border' && rnd() < .18 ? 'National ID card' : 'Passport',
         docNumber: `${N.doc}${pad(intBetween(rnd, 0, 9999999), 7)}`,
         phone: genPhone(rnd, nat),
         originCountry: direction === 'Entry' ? fCountry : 'Somaliland',
