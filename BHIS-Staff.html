@@ -3488,7 +3488,7 @@ const APP = {
   ministry: 'Ministry of Health Development',
   country: 'Republic of Somaliland',
   version: 'Version 1.0',
-  storageKey: 'bhis-demo-state-v7',
+  storageKey: 'bhis-demo-state-v8',
   logoKey: 'bhis-demo-logo',
 };
 
@@ -3863,47 +3863,51 @@ function generateSeed(now) {
   const seq = { trav: 18240, scr: 9120, lab: 3310, alt: 1180, rpt: 520, spc: 6020, vax: 4100 };
   const today0 = sod(now);
   const stWeights = stations.map(s => [s, s.weight]);
+  const extraLab = [];
 
   const makeTest = (trav, scrAt, typeCode, flagged, opts = {}) => {
+    const R = opts.rng || rnd;
     const st = trav.station;
     const t = { id: `LAB-${yy(now)}-${pad(++seq.lab, 5)}`, travelerRef: trav.ref, station: st, type: typeCode };
     let name = TEST_TYPES[typeCode].label, specimen = TEST_TYPES[typeCode].specimen;
-    if (typeCode === 'other_cd') { const o = pick(rnd, OTHER_CD_TESTS); name = o.name; specimen = o.specimen; }
-    if (typeCode === 'other_cfg') { const o = pick(rnd, OTHER_CFG_TESTS); name = o.name; specimen = o.specimen; }
+    if (typeCode === 'other_cd') { const o = pick(R, OTHER_CD_TESTS); name = o.name; specimen = o.specimen; }
+    if (typeCode === 'other_cfg') { const o = pick(R, OTHER_CFG_TESTS); name = o.name; specimen = o.specimen; }
     t.testName = name; t.specimenType = specimen;
-    t.requestedAt = opts.requestedAt || scrAt + intBetween(rnd, 3, 12) * MIN;
-    t.collectedAt = t.requestedAt + intBetween(rnd, 5, 40) * MIN;
+    t.requestedAt = opts.requestedAt || scrAt + intBetween(R, 3, 12) * MIN;
+    t.collectedAt = t.requestedAt + intBetween(R, 5, 40) * MIN;
     t.specimenRef = `SPC-${st}-${yy(now)}-${pad(++seq.spc, 5)}`;
     t.lab = labsFor(st, typeCode);
-    t.requestedBy = pick(rnd, OFFICERS[st]);
-    t.labOfficer = pick(rnd, LAB_OFFICERS);
+    t.requestedBy = pick(R, OFFICERS[st]);
+    t.labOfficer = pick(R, LAB_OFFICERS);
     t.confirmatoryFor = opts.confirmatoryFor || null;
     t.notes = '';
     let tatH;
-    if (typeCode === 'antigen') tatH = between(rnd, .25, .6);
-    else if (typeCode === 'other_cfg') tatH = between(rnd, 30, 70);
-    else tatH = rnd() < .14 ? between(rnd, 28, 70) : between(rnd, 3, 18);
+    if (opts.tatH) tatH = opts.tatH; else
+    if (typeCode === 'antigen') tatH = between(R, .25, .6);
+    else if (typeCode === 'other_cfg') tatH = between(R, 30, 70);
+    else tatH = R() < .14 ? between(R, 28, 70) : between(R, 3, 18);
     const doneAt = t.collectedAt + tatH * HOUR;
     if (t.collectedAt > now) {
       t.status = 'Requested'; t.collectedAt = null; t.result = 'Pending'; t.resultAt = null;
     } else if (doneAt <= now) {
-      const r = rnd();
+      const r = R();
       if (r < .022) { t.status = 'Invalid'; t.result = 'Invalid'; t.resultAt = doneAt; t.notes = 'Specimen leaked in transit — recollection advised.'; }
       else if (r < .032) { t.status = 'Cancelled'; t.result = null; t.resultAt = null; t.notes = 'Traveler departed before specimen could be processed.'; }
       else {
         t.status = 'Completed'; t.resultAt = doneAt;
         const pp = opts.forcePositiveP !== undefined ? opts.forcePositiveP : flagged ? (typeCode === 'antigen' ? .09 : typeCode === 'other_cfg' ? .02 : .06) : .002;
-        const r2 = rnd();
+        const r2 = R();
         t.result = r2 < pp ? 'Positive' : r2 < pp + .035 ? 'Inconclusive' : 'Negative';
-        if (t.result === 'Inconclusive') t.notes = 'Late amplification / faint line — repeat RT-PCR on a new sample in ≥ 48 h.';
+        if (TEST_TYPES[typeCode].resultType === 'num') { const d = TEST_TYPES[typeCode], r3 = R(); const v = r3 < .12 ? d.refLow * between(R, .6, .95) : r3 < .22 ? d.refHigh * between(R, 1.05, 1.6) : between(R, d.refLow, d.refHigh); t.value = Math.round(v * 10) / 10; t.result = numericFlag(typeCode, t.value); }
+        else if (t.result === 'Inconclusive') t.notes = 'Late amplification / faint line — repeat RT-PCR on a new sample in ≥ 48 h.';
       }
     } else {
       const el = (now - t.collectedAt) / HOUR;
       t.result = 'Pending'; t.resultAt = null;
       if (typeCode === 'antigen') t.status = 'Processing';
       else if (el < 2) t.status = 'Specimen Collected';
-      else if (el < 7) t.status = rnd() < .6 ? 'Pending' : 'Processing';
-      else t.status = rnd() < .7 ? 'Processing' : 'Pending';
+      else if (el < 7) t.status = R() < .6 ? 'Pending' : 'Processing';
+      else t.status = R() < .7 ? 'Processing' : 'Pending';
     }
     t.updatedAt = t.resultAt || t.collectedAt || t.requestedAt;
     tests.push(t);
@@ -3986,6 +3990,7 @@ function generateSeed(now) {
       // WHO does not recommend testing travellers without symptoms; tests follow secondary screening or a suspected case
       if (outcome === 'referred') typeCode = pickW(rnd, [['pcr', 80], ['antigen', 17], ['other_cfg', 3]]);
       else if (outcome === 'assess' && rnd() < .7) typeCode = pickW(rnd, [['antigen', 70], ['pcr', 30]]);
+      if (flagged) extraLab.push([t, scrAt]);
       if (!typeCode) continue;
       const test = makeTest(t, scrAt, typeCode, flagged);
       if (test.type === 'antigen' && test.result === 'Positive' && rnd() < .7) {
@@ -3994,6 +3999,16 @@ function generateSeed(now) {
       }
     }
   }
+
+  // routine fever work-up tests (malaria, Hb, glucose) for travelers who needed further assessment
+  const rx = mulberry32(777);
+  extraLab.forEach(([t, scrAt]) => {
+    const early = () => scrAt + (1 + rx()) * MIN; // requested just before the outbreak test, so that stays the traveler's latest test
+    if (rx() < .55) makeTest(t, scrAt, 'malaria', true, { rng: rx, requestedAt: early(), forcePositiveP: .14, tatH: between(rx, .2, .5) });
+    if (rx() < .4) makeTest(t, scrAt, 'hb', false, { rng: rx, requestedAt: early(), tatH: between(rx, .15, .6) });
+    if (rx() < .35) makeTest(t, scrAt, 'glucose', false, { rng: rx, requestedAt: early(), tatH: between(rx, .1, .4) });
+  });
+  tests.sort((a, b) => a.requestedAt - b.requestedAt);
 
   const state = { version: 4, anchor: now, seq, stations, travelers, screenings, tests, vaccinations, alerts: [], audit: [], catalog: defaultCatalog() };
   syncAlerts(state, now, true);
@@ -4741,7 +4756,7 @@ const UI = {
   dash: { period: '7d', station: 'all' },
   records: { q: '', station: 'all', scr: 'all', lab: 'all', res: 'all', period: 'all', page: 1, sort: 'regAt', dir: -1 },
   alerts: { q: '', status: 'active', priority: 'all', cat: 'all', station: 'all', page: 1, selected: null },
-  reports: { type: 'national', period: '7d', station: 'all', date: null, ref: null, result: 'all' },
+  reports: { type: 'national', period: '7d', station: 'all', date: null, ref: null, result: 'all', test: null, tres: 'all' },
   stations: { selected: 'HGA', period: '7d' },
   lab: { station: 'all', filter: 'all' },
   screening: { lastSaved: null, q: '', station: 'all', queue: 'waiting' },
@@ -6708,6 +6723,7 @@ const REPORT_TYPES = [
   { id: 'registration', title: 'Traveler registration report', desc: 'Travelers registered in a period', ico: 'userPlus' },
   { id: 'screening', title: 'Health screening report', desc: 'Screenings and outcomes', ico: 'stethoscope' },
   { id: 'lab', title: 'Laboratory test result report', desc: 'Tests, statuses and results', ico: 'flask' },
+  { id: 'bytest', title: 'Results by test', desc: 'Choose one test — see who is positive, negative or abnormal', ico: 'flask' },
   { id: 'traveler', title: 'Individual traveler record', desc: 'Registration, screening and laboratory history', ico: 'user' },
 ];
 const MAX_ROWS = 150;
@@ -6769,6 +6785,38 @@ function buildReport(p) {
     ref = reportRef(p.type, [p.period, p.station, p.result || '']);
     qrLines = [`Period: ${periodLabel(p.period)}`, `Station: ${stLabel}`, `Records: ${meta}`];
     meta = rMeta([['Report reference', `<span class="mono">${ref}</span>`], ['Reporting period', h(periodLabel(p.period))], ['Border station', h(stLabel)], ['Records included', n0(meta)], ['Generated', fmtDT(now)], ['Prepared by', h(prepared)], ['Data source', 'SHIS'], ['Classification', 'Internal — public health']]);
+  }
+
+  if (p.type === 'bytest') {
+    const keys = Object.keys(TEST_TYPES);
+    if (!p.test || !TEST_TYPES[p.test]) p.test = keys[0];
+    const d = TEST_TYPES[p.test] || {}, num = d.resultType === 'num';
+    const m = computeMetrics(p.period, p.station, now);
+    const all = m.tests.filter(x => x.type === p.test);
+    const cls = x => x.status === 'Cancelled' ? 'cancelled' : isUnfinished(x) ? 'pending' : (x.value != null && num) ? String(x.result || 'Normal').toLowerCase() : String(x.result || '').toLowerCase();
+    const count = k => all.filter(x => cls(x) === k).length;
+    const tf = p.tres || 'all';
+    const order = { positive: 0, high: 0, low: 0, inconclusive: 1, pending: 2, negative: 3, normal: 3, invalid: 4, cancelled: 5 };
+    let list = all.slice().sort((a, b) => (order[cls(a)] ?? 9) - (order[cls(b)] ?? 9) || (b.resultAt || b.requestedAt) - (a.resultAt || a.requestedAt));
+    if (tf === 'abnormal') list = list.filter(x => ['high', 'low'].includes(cls(x)));
+    else if (tf !== 'all') list = list.filter(x => cls(x) === tf);
+    const colr = { positive: '#b42318', high: '#b54708', low: '#b54708', inconclusive: '#b54708', pending: '#475467', negative: '#067647', normal: '#067647' };
+    const rows = list.map((x, i) => { const t = IDX.byRef.get(x.travelerRef) || {}; const c = cls(x); return [i + 1, `${h(t.name || '')}<br><span class="mono">${h(x.travelerRef)}</span>`, t.sex ? `${t.sex}/${travelerAge(t)}` : '', h(t.nationality || ''), h(t.phone || ''), h(stationName(x.station)), x.collectedAt ? fmtSDT(x.collectedAt) : fmtSDT(x.requestedAt), `<b style="color:${colr[c] || '#333'}">${h(resultDisplay(x).text)}</b>`, h(normalRangeText(x)), x.resultAt ? fmtSDT(x.resultAt) : '—']; });
+    const stats = num
+      ? [[n0(all.length), 'Tests requested'], [n0(count('high')), 'High'], [n0(count('low')), 'Low'], [n0(count('normal')), 'Normal'], [n0(count('pending')), 'Awaiting result'], [n0(count('invalid') + count('cancelled')), 'Invalid / cancelled']]
+      : [[n0(all.length), 'Tests requested'], [n0(count('positive')), 'Positive'], [n0(count('negative')), 'Negative'], [n0(count('inconclusive')), 'Inconclusive'], [n0(count('pending')), 'Awaiting result'], [n0(count('invalid') + count('cancelled')), 'Invalid / cancelled']];
+    const done = num ? count('high') + count('low') + count('normal') : count('positive') + count('negative');
+    const posRate = num ? (done ? pct(count('high') + count('low'), done) : '—') : (done ? pct(count('positive'), done) : '—');
+    stats.push([posRate, num ? 'Abnormal rate' : 'Positivity rate']);
+    const fl = { positive: 'positive only', negative: 'negative only', abnormal: 'abnormal (high or low) only', normal: 'normal only', inconclusive: 'inconclusive only', pending: 'awaiting result only' }[tf];
+    title = `Results by test — ${d.label || p.test}`;
+    body = `<div class="r-section">Test</div><p style="margin:4px 0">${h(d.label || p.test)}${d.specimen ? ` · specimen: ${h(d.specimen)}` : ''} · normal: <b>${h(normalRangeText(p.test))}</b></p>
+      <div class="r-section">Summary</div>${rStats(stats)}
+      <div class="r-section">Travelers tested${fl ? ` — ${h(fl)}` : ''}</div>${rTable(['#', 'Traveler', 'Sex/Age', 'Nationality', 'Phone', 'Station', 'Sample date', 'Result', 'Normal range', 'Result date'], rows, [0])}`;
+    csv = [['Test', d.label || p.test], ['Normal range', normalRangeText(p.test)], [], ['Registration ref', 'Traveler', 'Sex', 'Age', 'Nationality', 'Phone', 'Staying at', 'Station', 'Sample date', 'Status', 'Result', 'Value', 'Normal range', 'Result date', 'Laboratory'], ...list.map(x => { const t = IDX.byRef.get(x.travelerRef) || {}; return [x.travelerRef, t.name || '', t.sex || '', t.sex ? travelerAge(t) : '', t.nationality || '', t.phone || '', t.stayAddress || '', stationName(x.station), fmtDT(x.collectedAt || x.requestedAt), x.status, resultDisplay(x).text, x.value ?? '', normalRangeText(x), x.resultAt ? fmtDT(x.resultAt) : '', x.lab || '']; })];
+    ref = reportRef('bytest', [p.period, p.station, p.test, tf]);
+    qrLines = [`Test: ${d.label || p.test}`, `Period: ${periodLabel(p.period)}`, `Station: ${stLabel}`, `Records: ${list.length}`];
+    meta = rMeta([['Report reference', `<span class="mono">${ref}</span>`], ['Reporting period', h(periodLabel(p.period))], ['Border station', h(stLabel)], ['Records included', n0(list.length)], ['Generated', fmtDT(now)], ['Prepared by', h(prepared)], ['Data source', 'SHIS'], ['Classification', 'Confidential — health data']]);
   }
 
   if (p.type === 'daily') {
@@ -6870,8 +6918,8 @@ PAGES.reports = {
     if (!p.date) p.date = isoDate(Date.now());
     const def = REPORT_TYPES.find(r => r.id === p.type) || REPORT_TYPES[0];
     const rep = buildReport(p);
-    const showPeriod = ['registration', 'screening', 'lab', 'national'].includes(p.type);
-    const showStation = ['registration', 'screening', 'lab', 'daily'].includes(p.type);
+    const showPeriod = ['registration', 'screening', 'lab', 'national', 'bytest'].includes(p.type);
+    const showStation = ['registration', 'screening', 'lab', 'daily', 'bytest'].includes(p.type);
     return `
     <div class="page-intro"><div><h2>Results and reports</h2><p>Printable reports with the ministry header, report reference and QR verification. Use your browser’s print dialog to save as PDF.</p></div></div>
     <div class="grid report-print-root">
@@ -6884,6 +6932,7 @@ PAGES.reports = {
           ${p.type === 'daily' ? field('Date', `<input class="input" type="date" value="${p.date}" min="${isoDate(periodStart('30d'))}" max="${isoDate(Date.now())}" data-change="rpt-p" data-k="date">`, { span: 12 }) : ''}
           ${showStation ? field('Border station', `<select class="select" data-change="rpt-p" data-k="station">${p.type === 'daily' ? stationOptions(p.station === 'all' ? DB.stations[0].code : p.station, false) : stationOptions(p.station)}</select>`, { span: 12 }) : ''}
           ${p.type === 'lab' ? field('Results to include', `<select class="select" data-change="rpt-p" data-k="result">${options([{ value: 'all', label: 'All tests' }, { value: 'confirmed', label: 'Confirmed positive only' }, { value: 'prelim', label: 'Preliminary flags only' }, { value: 'pending', label: 'Awaiting result only' }, { value: 'negative', label: 'Negative only' }], p.result)}</select>`, { span: 12 }) : ''}
+          ${p.type === 'bytest' ? field('Test', `<select class="select" data-change="rpt-p" data-k="test">${options(Object.entries(TEST_TYPES).map(([v, d]) => ({ value: v, label: d.label || v })), p.test)}</select>`, { span: 12 }) + field('Show', `<select class="select" data-change="rpt-p" data-k="tres">${options(testDef(p.test).resultType === 'num' ? [{ value: 'all', label: 'All travelers tested' }, { value: 'abnormal', label: 'Abnormal (high or low)' }, { value: 'normal', label: 'Normal only' }, { value: 'pending', label: 'Awaiting result' }] : [{ value: 'all', label: 'All travelers tested' }, { value: 'positive', label: 'Positive only' }, { value: 'negative', label: 'Negative only' }, { value: 'inconclusive', label: 'Inconclusive only' }, { value: 'pending', label: 'Awaiting result' }], p.tres)}</select>`, { span: 12 }) : ''}
           ${p.type === 'traveler' ? field('Traveler', comboHTML('rpt-trav', p.ref, 'Search traveler'), { span: 12 }) : ''}
         </div></div></div>
       </aside>
@@ -6902,7 +6951,7 @@ PAGES.reports = {
 };
 ACT['rpt-type'] = el => { UI.reports.type = el.dataset.v; go('reports', UI.reports.type === 'traveler' && UI.reports.ref ? { type: 'traveler', ref: UI.reports.ref } : { type: el.dataset.v }); };
 ACT['rpt-type-sel'] = el => ACT['rpt-type']({ dataset: { v: el.value } });
-ACT['rpt-p'] = el => { UI.reports[el.dataset.k] = el.value; go('reports', { type: UI.reports.type }); };
+ACT['rpt-p'] = el => { UI.reports[el.dataset.k] = el.value; if (el.dataset.k === 'test') UI.reports.tres = 'all'; go('reports', { type: UI.reports.type }); };
 ACT['rpt-print'] = () => printReport();
 ACT['rpt-csv'] = () => {
   const rep = buildReport(UI.reports); if (!rep) return;
