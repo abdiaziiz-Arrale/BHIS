@@ -124,7 +124,7 @@ h1, h2, h3, h4 { margin: 0; font-weight: 600; letter-spacing: -.01em; }
 .nav .count.crit { background: var(--crit); color: #fff; }
 .nav .count.warn { background: var(--warn); color: #231600; }
 .sidebar-foot { margin-top: auto; padding: 14px; border-top: 1px solid rgba(255,255,255,.08); }
-.partner-strip { margin-bottom: 12px; padding: 10px; border-radius: 10px; background: #fff; text-align: center; }
+.partner-strip { margin-bottom: 12px; padding: 4px 0; text-align: center; }
 .partner-strip .ps-l { display: block; font-size: 10.5px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 6px; }
 .partner-strip .ps-logos { display: flex; align-items: center; justify-content: center; gap: 12px; }
 .partner-strip img { height: 44px; width: auto; max-width: 46%; object-fit: contain; }
@@ -529,6 +529,34 @@ table.tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
 .sdash-kpis { grid-template-columns: repeat(5, minmax(0, 1fr)); }
 @media (max-width: 1100px) { .sdash-kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 @media (max-width: 640px) { .sdash-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); } .sdash-actions .btn { flex: 1 1 100%; justify-content: center; } }
+/* ---------------- Laboratory results sheet ---------------- */
+.ls-trav { display: flex; gap: 12px; align-items: center; padding: 12px 14px; border: 1px solid var(--green-200); background: var(--green-50); border-radius: var(--radius); margin-bottom: 14px; }
+.ls-trav .initials { width: 40px; height: 40px; border-radius: 50%; background: var(--green-600); color: #fff; display: grid; place-items: center; font-weight: 700; flex: none; }
+.ls-trav strong { display: block; font-size: 15px; } .ls-trav span { color: var(--ink-2); font-size: 12.5px; }
+.ls-head, .ls-row { display: grid; grid-template-columns: minmax(180px, 1.2fr) minmax(260px, 1.6fr) minmax(130px, .8fr); gap: 14px; align-items: center; }
+.ls-head { padding: 0 14px 6px; font-size: 11.5px; font-weight: 600; color: var(--ink-3); text-transform: uppercase; letter-spacing: .04em; }
+.ls-list { display: flex; flex-direction: column; gap: 8px; }
+.ls-row { padding: 12px 14px; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; }
+.ls-row.focus { border-color: var(--green-600); box-shadow: 0 0 0 3px rgba(17,112,63,.12); }
+.ls-row.off { opacity: .6; background: #f7f8f8; }
+.ls-test strong { display: block; font-size: 13.5px; } .ls-test > span { display: block; font-size: 11.5px; color: var(--ink-3); margin-top: 2px; }
+.ls-ctrl { display: flex; justify-content: center; }
+.ls-chips { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
+.ls-chip input { position: absolute; opacity: 0; pointer-events: none; }
+.ls-chip span { display: inline-flex; align-items: center; min-height: 38px; padding: 0 14px; border: 1px solid var(--line); border-radius: 9px; font-weight: 600; font-size: 13px; cursor: pointer; background: #fff; }
+.ls-chip input:focus-visible + span { outline: 2px solid var(--green-500); outline-offset: 2px; }
+.ls-chip.neg input:checked + span { background: var(--good-bg); border-color: var(--good); color: var(--good-ink); }
+.ls-chip.pos input:checked + span { background: var(--crit-bg); border-color: var(--crit); color: var(--crit-ink); }
+.ls-chip.inc input:checked + span { background: var(--warn-bg); border-color: var(--warn); color: var(--warn-ink); }
+.ls-num { display: flex; align-items: center; gap: 8px; width: 100%; max-width: 260px; }
+.ls-num .input { text-align: center; font-size: 16px; font-weight: 600; }
+.ls-unit { color: var(--ink-3); font-size: 12.5px; white-space: nowrap; }
+.ls-range { text-align: right; } .ls-range small { display: block; color: var(--ink-3); font-size: 11px; } .ls-range b { font-size: 13px; } .ls-flag { display: block; margin-top: 4px; min-height: 22px; }
+@media screen and (max-width: 760px) { .ls-head { display: none; } .ls-row { grid-template-columns: 1fr; } .ls-ctrl { justify-content: flex-start; } .ls-range { text-align: left; } .ls-chips { justify-content: flex-start; } }
+/* ---------------- Alerts follow-up / full screen ---------------- */
+.al-follow { margin-top: 12px; padding: 12px; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; }
+body.fs-mode .app { grid-template-columns: 1fr; }
+body.fs-mode .sidebar { display: none; }
 /* ---------------- Somaliland laboratory map ---------------- */
 .lm-body { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(280px, 1fr); gap: 18px; align-items: start; }
 .lm-svg { width: 100%; height: auto; display: block; border-radius: 10px; }
@@ -5075,7 +5103,7 @@ ACT['reset-demo'] = () => {
 };
 ACT['open-verify'] = () => openVerify();
 ACT['toggle-fullscreen'] = () => { try { if (document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen(); } catch (e) { toast('Full screen not available', 'Press F11 to use the whole screen.'); } };
-document.addEventListener('fullscreenchange', () => { const l = document.querySelector('#fs-btn .fs-lbl'); if (l) l.textContent = document.fullscreenElement ? 'Exit full screen' : 'Full screen'; });
+document.addEventListener('fullscreenchange', () => { const on = !!document.fullscreenElement; document.body.classList.toggle('fs-mode', on); const l = document.querySelector('#fs-btn .fs-lbl'); if (l) l.textContent = on ? 'Exit full screen' : 'Full screen'; });
 ACT['open-about'] = () => openAbout();
 ACT['close-modal'] = () => closeModal();
 ACT['close-drawer'] = () => { closeDrawer(); if (CURRENT.page === 'records' && CURRENT.params.get('ref')) replaceHash('#/records'); };
@@ -5382,7 +5410,22 @@ function ministryData(f) {
     sparkSusp: spark(d => DB.screenings.filter(s => sMatch(s.station) && s.outcome === 'referred' && inDay(s.at, d)).length),
     sparkConf: spark(d => DB.tests.filter(t => sMatch(t.station) && isConfirmedPositive(t) && inDay(t.resultAt, d)).length),
     sparkAff: spark(d => DB.travelers.filter(t => sMatch(t.station) && AFFECTED_COUNTRIES.includes(t.originCountry) && inDay(t.regAt, d)).length),
+    sparkUrg: spark(d => DB.alerts.filter(a => sMatch(a.station) && a.priority === 'urgent' && inDay(a.createdAt, d)).length),
   };
+}
+function confirmedByCountryHTML(m) {
+  const byC = {};
+  m.confirmed.forEach(t => { const tr = IDX.byRef.get(t.travelerRef); const c = tr ? tr.originCountry : 'Unknown';
+    const o = byC[c] || (byC[c] = { n: 0, st: new Set(), nat: new Set(), last: 0, refs: [] });
+    o.n++; o.st.add(stationName(t.station)); if (tr) { o.nat.add(tr.nationality); o.refs.push(tr.ref); } o.last = Math.max(o.last, t.resultAt || 0); });
+  const rows = Object.entries(byC).sort((a, b) => b[1].n - a[1].n || b[1].last - a[1].last);
+  const max = Math.max(1, ...rows.map(r => r[1].n));
+  return `<div class="section-title"><h3>Confirmed cases by country of origin</h3><p>Where confirmed cases in the period were coming from · ${n0(m.confirmed.length)} confirmed</p></div>
+    <div class="card"><div class="table-wrap">${rows.length ? `<table class="tbl cardify"><thead><tr><th class="c-primary">Country of origin</th><th class="num">Confirmed</th><th style="width:34%">Share</th><th>Border stations</th><th class="hide-md">Nationalities</th><th>Most recent</th></tr></thead><tbody>
+      ${rows.map(([c, o]) => `<tr class="clickable" data-act="go" data-page="records" data-params='${JSON.stringify({ ref: o.refs[0] || '' })}'><td><strong>${h(c)}</strong>${AFFECTED_COUNTRIES.includes(c) ? ` ${badge('Outbreak area', 'crit', 'nodot')}` : ''}</td><td class="num"><b style="color:var(--crit-ink)">${o.n}</b></td>
+        <td><div class="cell-bar"><div class="track"><i style="width:${(o.n / max * 100).toFixed(0)}%;background:var(--crit)"></i></div><b class="nowrap">${pct(o.n, m.confirmed.length)}</b></div></td>
+        <td class="small">${h([...o.st].join(', '))}</td><td class="small hide-md">${h([...o.nat].join(', '))}</td><td class="small nowrap">${o.last ? fmtSDT(o.last) : '—'}</td></tr>`).join('')}
+      </tbody></table>` : empty('No confirmed cases', 'No confirmed positive result was reported in this period.')}</div></div>`;
 }
 PAGES.ministry = {
   title: 'Ministry Overview',
@@ -5410,7 +5453,7 @@ PAGES.ministry = {
       ${tile('Travelers screened at the border', n0(m.travelers.length), `${n0(m.screenedOk.length)} screenings completed`, D.sparkTrav, C.green, 'users', '#/records')}
       ${tile('Suspected cases', n0(D.suspected.length), 'Isolated and referred at the border', D.sparkSusp, C.warn, 'stethoscope', '#/screening')}
       ${tile('Confirmed cases', n0(m.confirmed.length), `${m.prelim.length} preliminary awaiting RT-PCR`, D.sparkConf, C.crit, 'flask', '#/lab')}
-      ${tile('From outbreak-affected countries', n0(D.affected.length), `${h(AFFECTED_COUNTRIES.join(', '))} · 21-day follow-up`, D.sparkAff, C.info, 'globe', '#/records')}
+      ${tile('Urgent alerts open', n0(m.urgentOpen), `${n0(m.active.length)} active alerts · ${n0(m.pendingAll)} lab results awaiting`, D.sparkUrg, C.info, 'bell', '#/alerts?priority=urgent')}
     </div>
 
     <div class="grid g2">
@@ -5440,7 +5483,8 @@ PAGES.ministry = {
         <td class="mono">${h(c.ref)}</td><td>${c.confirmed ? badge('Confirmed', 'crit') : badge('Suspected', 'warn')}</td><td><b>${h(t ? initials(t.name).toUpperCase() : '')}</b></td>
         <td>${t ? `${t.sex}, ${travelerAge(t)}` : ''}</td><td>${h(stationName(t ? t.station : ''))}</td><td>${h(t ? t.originCountry : '')}</td><td class="nowrap">${fmtSDT(c.at)}</td>
         <td>${lt ? resultBadge(lt) : badge('No test yet', 'neutral')}</td><td class="small">${sc && sc.outcome === 'referred' ? h(sc.referralStatus.replace('Referred — ', '')) : '—'}</td></tr>`; }).join('')}
-      </tbody></table>` : empty('No suspected or confirmed cases', 'No traveler met the suspected-case definition in this period.')}</div></div>`;
+      </tbody></table>` : empty('No suspected or confirmed cases', 'No traveler met the suspected-case definition in this period.')}</div></div>
+    ${confirmedByCountryHTML(m)}`;
   },
   mount() {
     const f = UI.min, D = ministryData(f), m = D.m;
@@ -6314,43 +6358,77 @@ function relatedTravelerTestsHTML(test) {
     </div>`).join('')}
   </section>`;
 }
+function sheetRowHTML(x, focusId) {
+  const d = testDef(x), num = isNumericTest(x), done = x.status === 'Completed', off = ['Cancelled', 'Invalid'].includes(x.status);
+  const cur = done ? x.result : '';
+  const ctrl = off ? `<span class="small muted">${h(STATUS_LABEL[x.status])} — reopen it from the test menu</span>`
+    : num ? `<div class="ls-num"><input class="input" type="number" step="any" name="v_${x.id}" value="${done && x.value != null ? x.value : ''}" data-input="ls-num" data-id="${x.id}" placeholder="Enter value" aria-label="${attr(x.testName)} value"><span class="ls-unit">${h(d.unit || '')}</span></div>`
+    : `<div class="ls-chips" role="radiogroup" aria-label="${attr(x.testName)} result">${['Negative', 'Positive', 'Inconclusive'].map(r => `<label class="ls-chip ${r === 'Positive' ? 'pos' : r === 'Inconclusive' ? 'inc' : 'neg'}"><input type="radio" name="r_${x.id}" value="${r}" ${cur === r ? 'checked' : ''}><span>${r}</span></label>`).join('')}</div>`;
+  return `<div class="ls-row ${x.id === focusId ? 'focus' : ''} ${off ? 'off' : ''}">
+    <div class="ls-test"><strong>${h(x.testName)}</strong><span class="mono">${h(x.id)}</span><span>${labBadge(x)}</span></div>
+    <div class="ls-ctrl">${ctrl}</div>
+    <div class="ls-range"><small>Normal range</small><b>${h(normalRangeText(x))}</b><span class="ls-flag" id="flag_${x.id}">${done && num && x.value != null ? badge(x.result, x.result === 'Normal' ? 'good' : 'warn') : ''}</span></div>
+  </div>`;
+}
 ACT['lab-edit'] = el => {
   const x = IDX.testById.get(el.dataset.id); if (!x) return;
   const tr = IDX.byRef.get(x.travelerRef);
+  const tests = (IDX.testsBy.get(x.travelerRef) || []).slice().sort((a, b) => (b.id === x.id) - (a.id === x.id) || isUnfinished(b) - isUnfinished(a) || b.requestedAt - a.requestedAt);
   openModal({
-    title: 'Update laboratory result',
-    sub: `<span class="lab-edit-ref">${h(x.id)}</span>${h(x.testName)} · ${h(tr ? tr.name : x.travelerRef)}`,
+    title: 'Laboratory results',
+    sub: `Enter results for each test · ${tests.length} test${tests.length === 1 ? '' : 's'} for this traveler`,
     wide: true,
-    body: `<form id="lab-edit-form" data-id="${x.id}" data-type="${x.type}" novalidate><div class="fields">
-      ${!x.collectedAt ? field('Specimen collection date and time', `<input class="input" type="datetime-local" name="collectedAt" value="">`, { req: true, span: 6, err: 'Enter when the specimen was collected.' }) : `<div class="f s6"><label>Specimen collected</label><div class="readonly-field" style="font-family:var(--font)">${fmtDT(x.collectedAt)}</div></div>`}
-      <div class="f s6"><label>Laboratory</label><div class="readonly-field" style="font-family:var(--font)">${h(x.lab)}</div></div>
-      ${statusBlock(x)}
-      <div class="f s12" id="lab-confirm-wrap" style="display:none"><label class="check" style="border-color:#f3d79b;background:var(--warn-bg)"><input type="checkbox" name="confirm" value="yes" checked>Request a confirmatory RT-PCR now (WHO: rapid test positives must be confirmed)</label></div>
-      ${field('Laboratory officer', `<select class="select" name="labOfficer">${options(LAB_OFFICERS.concat(!x.labOfficer || LAB_OFFICERS.includes(x.labOfficer) ? [] : [x.labOfficer]), x.labOfficer || LAB_OFFICERS[0])}</select>`, { req: true, span: 6 })}
-      ${field('Notes', `<textarea class="textarea" name="notes" maxlength="500">${h(x.notes || '')}</textarea>`, { span: 12 })}
-    </div>${isOverdue(x) ? `<div class="suggest" style="margin-top:12px">${icon('alert')}<span>This test is overdue (${testAgeH(x).toFixed(1)} h since collection; limit ${TEST_TYPES[x.type].limitH} h). Entering a result will auto-resolve the overdue alert.</span></div>` : ''}</form>${relatedTravelerTestsHTML(x)}`,
-    foot: `<button class="btn" data-act="close-modal">Cancel</button><button class="btn primary" data-act="lab-edit-save">${icon('check')}Save update</button>`,
+    body: `${tr ? `<div class="ls-trav"><span class="initials">${h(initials(tr.name))}</span><div><strong>${h(tr.name)}</strong><span><span class="mono">${h(tr.ref)}</span> · ${tr.sex === 'F' ? 'Female' : 'Male'}, ${travelerAge(tr)} · ${h(tr.nationality)} · ${h(stationName(tr.station))} · coming from ${h(tr.originCountry)}</span></div></div>` : ''}
+      <form id="lab-sheet" data-ref="${attr(x.travelerRef)}" novalidate>
+        <div class="ls-head"><span>Test</span><span>Result</span><span>Normal range</span></div>
+        <div class="ls-list">${tests.map(t => sheetRowHTML(t, x.id)).join('')}</div>
+        <div class="fields" style="margin-top:14px">${field('Laboratory officer', `<select class="select" name="labOfficer">${options(LAB_OFFICERS, x.labOfficer && LAB_OFFICERS.includes(x.labOfficer) ? x.labOfficer : LAB_OFFICERS[0])}</select>`, { req: true, span: 6 })}</div>
+        <p class="small muted" style="margin:8px 0 0">Only the rows you fill in are saved. A positive rapid test automatically requests a confirmatory RT-PCR. To change a test's status (sample taken, in laboratory, invalid, cancelled) use the ⋯ menu on the Laboratory list.</p>
+      </form>`,
+    foot: `<button class="btn" data-act="close-modal">Cancel</button><button class="btn primary" data-act="lab-sheet-save">${icon('check')}Save results</button>`,
   });
-  const form = document.getElementById('lab-edit-form');
-  form.addEventListener('change', e => { const f = e.target.closest('.f'); if (f) f.classList.remove('invalid'); });
-  syncLabForm(form);
 };
-ACT['lab-edit-save'] = () => {
-  const form = document.getElementById('lab-edit-form'); clearInvalid(form);
-  const x = IDX.testById.get(form.dataset.id), t = IDX.byRef.get(x.travelerRef);
-  const d = formData(form);
-  const v = validateLab(form, d, t, x);
-  if (!v.ok) { toast('Update not saved', 'Complete the highlighted fields.'); return; }
-  const res = updateTest(x.id, { status: d.status, result: v.result, value: v.value, resultAt: v.resultAt, collectedAt: d.status === 'Requested' ? null : (v.collectedAt || x.collectedAt), labOfficer: d.labOfficer, notes: d.notes });
-  let extra = '';
-  if (x.type === 'antigen' && TEST_TYPES.pcr && d.status === 'Completed' && v.result === 'Positive' && (d.confirm || []).includes('yes') && !DB.tests.some(y => y.confirmatoryFor === x.id)) {
-    const c = addTest({ travelerRef: x.travelerRef, station: x.station, type: 'pcr', testName: TEST_TYPES.pcr.label, specimenType: TEST_TYPES.pcr.specimen, lab: labsFor(x.station, 'pcr'), requestedAt: Date.now(), collectedAt: null, status: 'Requested', result: 'Pending', resultAt: null, labOfficer: d.labOfficer, requestedBy: CURRENT_USER.name, notes: `Confirmatory RT-PCR for rapid test ${x.id}.`, confirmatoryFor: x.id });
-    extra = ` Confirmatory RT-PCR ${c.test.id} requested.`;
+ACT['ls-num'] = el => { const o = document.getElementById('flag_' + el.dataset.id), x = IDX.testById.get(el.dataset.id); if (!o || !x) return; if (el.value === '') { o.innerHTML = ''; return; } const fl = numericFlag(x.type, +el.value); o.innerHTML = badge(fl, fl === 'Normal' ? 'good' : 'warn'); };
+ACT['lab-sheet-save'] = () => {
+  const form = document.getElementById('lab-sheet'); if (!form) return;
+  const d = formData(form), now = Date.now(), officer = d.labOfficer || LAB_OFFICERS[0];
+  const tests = (IDX.testsBy.get(form.dataset.ref) || []).filter(x => !['Cancelled', 'Invalid'].includes(x.status));
+  const changes = [];
+  for (const x of tests) {
+    if (isNumericTest(x)) {
+      const raw = d['v_' + x.id]; if (raw === undefined || raw === '' || isNaN(+raw)) continue;
+      const v = +raw; if (x.status === 'Completed' && x.value === v) continue;
+      changes.push([x, { result: numericFlag(x.type, v), value: v }]);
+    } else {
+      const r = d['r_' + x.id]; if (!r || (x.status === 'Completed' && x.result === r)) continue;
+      changes.push([x, { result: r, value: null }]);
+    }
+  }
+  if (!changes.length) { toast('Nothing to save', 'Choose a result or enter a value for at least one test.'); return; }
+  const created = [], resolved = [], extra = [];
+  for (const [x, p] of changes) {
+    const res = updateTest(x.id, { status: 'Completed', result: p.result, value: p.value, resultAt: now, collectedAt: x.collectedAt || now - 30 * MIN, labOfficer: officer });
+    created.push(...(res.created || [])); resolved.push(...(res.resolved || []));
+    if (p.result === 'Positive' && x.type === 'antigen' && TEST_TYPES.pcr && !DB.tests.some(y => y.confirmatoryFor === x.id)) {
+      const c = addTest({ travelerRef: x.travelerRef, station: x.station, type: 'pcr', testName: TEST_TYPES.pcr.label, specimenType: TEST_TYPES.pcr.specimen, lab: labsFor(x.station, 'pcr'), requestedAt: now, collectedAt: null, status: 'Requested', result: 'Pending', resultAt: null, labOfficer: '', requestedBy: CURRENT_USER.name, notes: `Confirmatory RT-PCR for rapid test ${x.id}.`, confirmatoryFor: x.id });
+      extra.push(`confirmatory RT-PCR ${c.test.id} requested`);
+    }
   }
   closeModal();
   setTimeout(() => { if (CURRENT.page === 'alerts' && innerWidth <= 1180 && document.getElementById('drawer').classList.contains('open')) openAlertSheet(UI.alerts.selected); }, 0);
-  toast(`${x.id} updated — ${d.status}${v.result && v.result !== 'Pending' ? ', ' + v.result : ''}`, describeAlertChanges(res) + extra, 6000);
+  toast(`${changes.length} result${changes.length > 1 ? 's' : ''} saved`, describeAlertChanges({ created, resolved }) + (extra.length ? ' · ' + extra.join(', ') : ''), 6000);
   refresh();
+};
+ACT['lab-status'] = el => {
+  const x = IDX.testById.get(el.dataset.id); if (!x) return;
+  const v = el.dataset.v, now = Date.now();
+  const patch = v === 'Processing' ? { status: 'Processing', collectedAt: x.collectedAt || now }
+    : v === 'Invalid' ? { status: 'Invalid', result: 'Invalid', resultAt: now, value: null }
+    : v === 'Cancelled' ? { status: 'Cancelled', result: null, resultAt: null, value: null }
+    : { status: 'Requested', result: 'Pending', resultAt: null, value: null };
+  const run = () => { const res = updateTest(x.id, patch); toast(`${x.id}: ${STATUS_LABEL[patch.status]}`, describeAlertChanges(res)); refresh(); };
+  if (v === 'Cancelled' || v === 'Invalid') askConfirm({ title: v === 'Cancelled' ? 'Cancel this test?' : 'Mark the sample invalid?', body: `${h(x.testName)} (${h(x.id)}). ${v === 'Invalid' ? 'A new sample will be needed.' : 'The test will have no result.'}`, yes: v === 'Cancelled' ? 'Cancel test' : 'Mark invalid', danger: true }, run);
+  else run();
 };
 
 /* ============================================================
@@ -6404,11 +6482,12 @@ function labRow(x) {
       <div class="menu" role="menu">
         ${waiting ? `
           ${x.status === 'Requested' ? `<button data-act="lab-collect" data-id="${x.id}">${icon('flask')}Record sample taken</button>` : ''}
-          ${isNumericTest(x) ? `<button data-act="lab-edit" data-id="${x.id}">${icon('check')}Enter result value</button>` : `<button data-act="lab-quick" data-id="${x.id}" data-v="Negative">${icon('check')}Record negative result</button>
-          <button data-act="lab-quick" data-id="${x.id}" data-v="Positive">${icon('alert')}Record positive result</button>
-          <button data-act="lab-quick" data-id="${x.id}" data-v="Inconclusive">${icon('info')}Record inconclusive result</button>
-          <button data-act="lab-edit" data-id="${x.id}">${icon('refresh')}More result options</button>`}`
-          : `<button data-act="print-traveler" data-ref="${attr(x.travelerRef)}">${icon('printer')}Print traveler record</button><button data-act="lab-edit" data-id="${x.id}">${icon('refresh')}Change result</button>`}
+          ${x.status !== 'Processing' ? `<button data-act="lab-status" data-id="${x.id}" data-v="Processing">${icon('activity')}Mark as in laboratory</button>` : ''}
+          <button data-act="lab-edit" data-id="${x.id}">${icon('check')}Enter results</button>
+          ${!isNumericTest(x) ? `<button data-act="lab-quick" data-id="${x.id}" data-v="Negative">${icon('check')}Quick: negative</button><button data-act="lab-quick" data-id="${x.id}" data-v="Positive">${icon('alert')}Quick: positive</button>` : ''}
+          <button data-act="lab-status" data-id="${x.id}" data-v="Invalid">${icon('xCircle')}Mark sample invalid</button>
+          <button data-act="lab-status" data-id="${x.id}" data-v="Cancelled">${icon('x')}Cancel test</button>`
+          : `<button data-act="print-traveler" data-ref="${attr(x.travelerRef)}">${icon('printer')}Print traveler record</button>${['Invalid', 'Cancelled'].includes(x.status) ? `<button data-act="lab-status" data-id="${x.id}" data-v="Requested">${icon('refresh')}Reopen test</button>` : `<button data-act="lab-edit" data-id="${x.id}">${icon('refresh')}Change result</button>`}`}
       </div>
     </div></div>`;
 }
@@ -6477,8 +6556,9 @@ const ALERTS_PER_PAGE = 15;
 function filteredAlerts() {
   const f = UI.alerts, q = f.q.trim().toLowerCase();
   return DB.alerts.filter(a => {
-    if (f.status === 'active' && a.status === 'Resolved') return false;
-    if (f.status !== 'active' && f.status !== 'all' && a.status !== f.status) return false;
+    if (f.status === 'overdue') { if (!alertResponseOverdue(a)) return false; }
+    else if (f.status === 'active' && a.status === 'Resolved') return false;
+    else if (f.status !== 'active' && f.status !== 'all' && a.status !== f.status) return false;
     if (f.priority !== 'all' && a.priority !== f.priority) return false;
     if (f.cat !== 'all' && a.category !== f.cat) return false;
     if (f.station !== 'all' && a.station !== f.station) return false;
@@ -6502,11 +6582,12 @@ PAGES.alerts = {
     const rows = list.slice((f.page - 1) * ALERTS_PER_PAGE, f.page * ALERTS_PER_PAGE);
     const counts = { active: DB.alerts.filter(a => a.status !== 'Resolved').length };
     ALERT_STATUSES.forEach(s => { counts[s] = DB.alerts.filter(a => a.status === s).length; });
+    counts.overdue = DB.alerts.filter(a => alertResponseOverdue(a)).length;
     const chip = (k, l) => `<button class="status-chip ${f.status === k ? 'on' : ''}" data-act="al-status" data-v="${k}"><b>${counts[k]}</b><span>${l}</span></button>`;
     return `
     <div class="page-intro"><div><h2>Alerts and follow-up</h2><p>Alerts are raised automatically from laboratory results, overdue tests, incomplete screenings and unresolved referrals. Assign an officer, update the status and record follow-up notes.</p></div>
       <button class="btn" data-act="al-csv">${icon('download')}Export CSV</button></div>
-    <div class="status-chips">${chip('active', 'All active')}${ALERT_STATUSES.map(s => chip(s, s)).join('')}</div>
+    <div class="status-chips">${chip('active', 'All active')}${chip('overdue', 'Response overdue')}${ALERT_STATUSES.map(s => chip(s, s)).join('')}</div>
     <div class="filterbar">
       <div class="searchbox" style="min-width:260px">${icon('search')}<input class="input" id="al-q" value="${attr(f.q)}" placeholder="Alert, traveler name or reference" data-input="al-q"></div>
       <select class="select" style="width:auto" data-change="al-f" data-k="priority">${options([{ value: 'all', label: 'All priorities' }, { value: 'urgent', label: 'Urgent' }, { value: 'high', label: 'High priority' }, { value: 'routine', label: 'Routine' }], f.priority)}</select>
@@ -6518,12 +6599,15 @@ PAGES.alerts = {
       <div class="card"><div class="table-wrap">${rows.length ? `<table class="tbl cardify"><thead><tr><th class="c-ref">Alert ref.</th><th>Priority</th><th class="c-primary">Category</th><th>Border station</th><th>Created</th><th>Assigned officer</th><th>Status</th></tr></thead><tbody>
         ${rows.map(a => { const t = IDX.byRef.get(a.travelerRef); return `<tr class="clickable ${a.id === f.selected ? 'selected' : ''}" data-act="al-select" data-id="${a.id}">
           <td><span class="mono">${a.id}</span><div class="small muted">${h(t ? t.name : a.travelerRef)}</div></td><td>${prioTag(a.priority)}</td><td>${h(ALERT_CATS[a.category].short)}</td><td>${h(stationName(a.station))}</td>
-          <td class="nowrap">${fmtDate(a.createdAt)}<div class="small muted">${fmtTime(a.createdAt)}</div></td><td>${officerShort(a.officer)}</td><td>${alertStatusBadge(a.status)}</td></tr>`; }).join('')}
+          <td class="nowrap">${fmtDate(a.createdAt)}<div class="small muted">${fmtTime(a.createdAt)} · ${a.status === 'Resolved' ? 'closed' : 'open ' + alertAge(a)}</div></td><td>${officerShort(a.officer)}</td><td>${alertStatusBadge(a.status)}${alertResponseOverdue(a) ? `<div style="margin-top:4px">${badge('Response overdue', 'crit', 'nodot')}</div>` : ''}</td></tr>`; }).join('')}
         </tbody></table>${pager(f, list.length, ALERTS_PER_PAGE, 'al-page')}` : empty('No alerts match these filters', 'Change the status or priority filter to see more alerts.', '<button class="btn" data-act="al-reset">Clear filters</button>')}</div></div>
       <aside class="sticky-side" id="al-detail">${innerWidth > 1180 ? alertDetail(f.selected) : ''}</aside>
     </div>`;
   },
 };
+function alertAge(a, now = Date.now()) { const ms = (a.status === 'Resolved' ? (a.updatedAt || now) : now) - a.createdAt; const hr = Math.max(0, ms / HOUR); return hr < 1 ? `${Math.round(hr * 60)} min` : hr < 48 ? `${hr.toFixed(hr < 10 ? 1 : 0)} h` : `${Math.floor(hr / 24)} d ${Math.round(hr % 24)} h`; }
+const RESPONSE_LIMIT_H = { urgent: 1, high: 24, routine: 72 };
+function alertResponseOverdue(a, now = Date.now()) { return a.status === 'Open' && (now - a.createdAt) / HOUR > (RESPONSE_LIMIT_H[a.priority] || 72); }
 function alertDetail(id) {
   const a = DB.alerts.find(x => x.id === id);
   if (!a) return `<div class="card"><div class="card-b">${empty('Select an alert', 'Choose an alert in the table to see details and record follow-up.')}</div></div>`;
@@ -6534,8 +6618,14 @@ function alertDetail(id) {
   return `<div class="card">
     <div class="card-h"><div><div class="row" style="gap:8px">${prioTag(a.priority, true)}${alertStatusBadge(a.status)}</div><h3 style="margin-top:8px;font-size:16px">${h(ALERT_CATS[a.category].label)}</h3><p class="mono">${a.id}</p></div></div>
     <div class="card-b">
-      <dl class="dl"><div><dt>Border station</dt><dd>${h(stationName(a.station))}</dd></div><div><dt>Created</dt><dd>${fmtDT(a.createdAt)}</dd></div>
+      ${alertResponseOverdue(a) ? `<div class="suggest" style="margin-bottom:12px">${icon('alert')}<span><b>Response overdue</b> — still open after ${alertAge(a)} (limit ${RESPONSE_LIMIT_H[a.priority]} h for ${h(PRIORITY_LABEL[a.priority] || a.priority)} alerts). Assign an officer now.</span></div>` : ''}
+      <dl class="dl"><div><dt>Border station</dt><dd>${h(stationName(a.station))}</dd></div><div><dt>Created</dt><dd>${fmtDT(a.createdAt)}<div class="small muted">${a.status === 'Resolved' ? 'Resolved after' : 'Open for'} ${alertAge(a)}</div></dd></div>
         <div><dt>Traveler</dt><dd>${t ? `${h(t.name)}<br>${travelerLink(t.ref)}` : h(a.travelerRef)}</dd></div><div><dt>Assigned officer</dt><dd>${a.officer ? h(a.officer) : '<span class="muted">Unassigned</span>'}</dd></div></dl>
+      ${t ? `<div class="al-follow"><div class="small"><b>Traveler follow-up</b></div>
+        <dl class="dl" style="margin-top:6px"><div><dt>Phone</dt><dd><a href="tel:${attr((t.phone || '').replace(/\s/g, ''))}">${h(t.phone || '—')}</a></dd></div><div><dt>Staying at</dt><dd>${t.stayAddress ? h(t.stayAddress) : '<span class="muted">Not recorded</span>'}</dd></div>
+        <div><dt>Coming from</dt><dd>${h(t.originCountry)}${AFFECTED_COUNTRIES.includes(t.originCountry) ? ' ' + badge('Outbreak area', 'crit', 'nodot') : ''}</dd></div><div><dt>Travel history (6 months)</dt><dd>${travelHistoryHTML(t)}</dd></div>
+        <div><dt>${t.direction === 'Entry' ? 'Arrived' : 'Departed'}</dt><dd>${fmtDT(t.travelDate || t.regAt)}</dd></div><div><dt>Day of 21-day follow-up</dt><dd>${Math.min(21, Math.max(1, Math.ceil((Date.now() - (t.travelDate || t.regAt)) / (24 * HOUR))))} of 21</dd></div></dl>
+        <div class="row" style="gap:6px;margin-top:8px"><a class="btn sm" href="tel:${attr((t.phone || '').replace(/\s/g, ''))}">${icon('message')}Call traveler</a><a class="btn sm" href="#/records?ref=${encodeURIComponent(t.ref)}">${icon('user')}Open record</a><button class="btn sm" data-act="print-traveler" data-ref="${attr(t.ref)}">${icon('printer')}Print record</button></div></div>` : ''}
       <div class="rec-card" style="margin-top:12px;background:#f8faf9"><div class="small"><b>Source record</b></div><div class="small" style="margin-top:4px">${h(a.detail || '')}</div>
         ${test ? `<div class="row" style="margin-top:8px;gap:6px">${labBadge(test)}${resultBadge(test)}<button class="btn sm" data-act="lab-edit" data-id="${test.id}">Update test</button></div>` : ''}
         ${scr ? `<div class="row" style="margin-top:8px;gap:6px">${outcomeBadge(scr.outcome)}${scr.outcome === 'referred' ? badge(scr.referralStatus, 'warn', 'nodot') : ''}<span class="small muted">${h(scr.id)} · ${fmtDT(scr.at)}</span></div>` : ''}
