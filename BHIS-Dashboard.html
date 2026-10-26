@@ -1119,7 +1119,7 @@ details.more summary { cursor: pointer; color: var(--green-700); font-size: 13px
 .cat-row.off { opacity: .5; }
 .cat-add { border-top: 1px solid var(--line); background: #f8faf9; border-radius: 0 0 var(--radius-l) var(--radius-l); }
 .cat-add h4 { font-size: 14px; margin-bottom: 10px; }
-@media screen and (max-width: 900px) { .lab-row { grid-template-columns: 1fr auto; } .lr-test { grid-column: 1 / -1; } .lr-act { grid-column: 1 / -1; justify-content: flex-start; } .lr-state { grid-row: 1; grid-column: 2; } }
+@media screen and (max-width: 900px) { .lab-row { grid-template-columns: 1fr auto; } .lr-test, .lr-tests { grid-column: 1 / -1; } .lr-act { grid-column: 1 / -1; justify-content: flex-start; } .lr-state { grid-row: 1; grid-column: 2; } }
 @media screen and (max-width: 760px) { .yn { flex-direction: column; align-items: flex-start; } .yn-btns { justify-content: flex-start; } .lab-bar .select, .lab-date .input { flex: 1; } .lab-date { width: 100%; } }
 .vax-bars { display: flex; flex-direction: column; gap: 10px; }
 .vb-row { display: grid; grid-template-columns: minmax(120px, 240px) minmax(0, 1fr) 40px; gap: 12px; align-items: center; font-size: 13px; }
@@ -1133,7 +1133,15 @@ details.more summary { cursor: pointer; color: var(--green-700); font-size: 13px
 .vax-details[open] > summary { margin-bottom: 8px; }
 .lab-row { grid-template-columns: minmax(200px, 260px) minmax(0, 1fr) 190px auto; }
 .lr-state { justify-self: start; }
-.lr-act .menu { min-width: 190px; }
+.lr-act .menu { min-width: 210px; }
+.lr-menu { max-height: 360px; overflow-y: auto; }
+.menu .menu-h { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--ink-3); padding: 8px 10px 4px; }
+.menu .menu-h .mono { text-transform: none; font-weight: 500; letter-spacing: 0; }
+.menu hr { border: 0; border-top: 1px solid var(--line); margin: 4px 0; }
+.lr-tests { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+.lr-t { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.lr-tn { font-size: 13.5px; font-weight: 600; min-width: 92px; }
+.lr-meta { font-size: 12px; color: var(--ink-3); }
 @media screen and (max-width: 560px) { .lab-row { grid-template-columns: 1fr; } .lr-state { grid-row: auto; grid-column: auto; } .lab-bar .seg { width: 100%; } }
 
 </style>
@@ -3686,9 +3694,9 @@ const STATION_SEED = [
 const SCREENING_TARGET = 90; // percent
 
 const NAMES = {
-  somM: ['Abdirahman', 'Mohamed', 'Ahmed', 'Abdillahi', 'Hassan', 'Hussein', 'Ismail', 'Yusuf', 'Ibrahim', 'Omar', 'Ali', 'Mustafe', 'Khadar', 'Guled', 'Saeed', 'Jama', 'Liban', 'Mahad', 'Bashir', 'Mukhtar', 'Daahir', 'Ilyaas', 'Hamse', 'Nimcaan', 'Abdiqani', 'Sakariye', 'Cabdi', 'Anwar', 'Faysal', 'Bile'],
-  somF: ['Hodan', 'Ifrah', 'Sahra', 'Fadumo', 'Amina', 'Khadra', 'Nimco', 'Hibo', 'Ubah', 'Sagal', 'Ayaan', 'Deeqa', 'Muna', 'Hamdi', 'Ruqiya', 'Shukri', 'Kaltun', 'Ikran', 'Faiza', 'Sucaad', 'Naciima', 'Hawa', 'Samira', 'Xamdi', 'Asma'],
-  somP: ['Ahmed', 'Mohamed', 'Jama', 'Warsame', 'Abdi', 'Duale', 'Farah', 'Hirsi', 'Aden', 'Elmi', 'Ismail', 'Yusuf', 'Gelle', 'Omar', 'Samatar', 'Nuur', 'Dirie', 'Kahin', 'Robleh', 'Abdillahi', 'Musse', 'Awale', 'Hassan', 'Osman', 'Guleid', 'Magan', 'Hersi', 'Barre', 'Shire', 'Qalib'],
+  somM: ['Abdirahman', 'Mohamed', 'Ahmed', 'Abdiaziiz', 'Abdirashid', 'Abdikarim', 'Abdisalaan', 'Mohamoud', 'Saleban', 'Yasin', 'Adan', 'Osman', 'Muse', 'Bile', 'Ayanle', 'Cumar', 'Xasan', 'Jaamac', 'Siciid', 'Barkhad', 'Hamza', 'Abdiwali', 'Fu’aad', 'Mahamed', 'Abdillahi', 'Hassan', 'Hussein', 'Ismail', 'Yusuf', 'Ibrahim', 'Omar', 'Ali', 'Mustafe', 'Khadar', 'Guled', 'Saeed', 'Jama', 'Liban', 'Mahad', 'Bashir', 'Mukhtar', 'Daahir', 'Ilyaas', 'Hamse', 'Nimcaan', 'Abdiqani', 'Sakariye', 'Cabdi', 'Anwar', 'Faysal', 'Bile'],
+  somF: ['Hodan', 'Ifrah', 'Maryan', 'Sahro', 'Faadumo', 'Ladan', 'Hinda', 'Idil', 'Najma', 'Ilhan', 'Raho', 'Sacdiyo', 'Halimo', 'Yasmin', 'Anisa', 'Hafsa', 'Nasra', 'Ubax', 'Khadija', 'Leyla', 'Caasha', 'Zamzam', 'Hoodo', 'Filsan', 'Sahra', 'Fadumo', 'Amina', 'Khadra', 'Nimco', 'Hibo', 'Ubah', 'Sagal', 'Ayaan', 'Deeqa', 'Muna', 'Hamdi', 'Ruqiya', 'Shukri', 'Kaltun', 'Ikran', 'Faiza', 'Sucaad', 'Naciima', 'Hawa', 'Samira', 'Xamdi', 'Asma'],
+  somP: ['Ahmed', 'Mohamed', 'Arrale', 'Egal', 'Dualeh', 'Abdirahman', 'Ali', 'Haji', 'Hussein', 'Ibrahim', 'Mahamoud', 'Saleban', 'Bulale', 'Fiidow', 'Yonis', 'Liban', 'Odowa', 'Geedi', 'Madar', 'Bihi', 'Tuur', 'Cigaal', 'Jibriil', 'Waais', 'Aw-Musse', 'Jama', 'Warsame', 'Abdi', 'Duale', 'Farah', 'Hirsi', 'Aden', 'Elmi', 'Ismail', 'Yusuf', 'Gelle', 'Omar', 'Samatar', 'Nuur', 'Dirie', 'Kahin', 'Robleh', 'Abdillahi', 'Musse', 'Awale', 'Hassan', 'Osman', 'Guleid', 'Magan', 'Hersi', 'Barre', 'Shire', 'Qalib'],
   ethM: ['Dawit', 'Yonas', 'Abebe', 'Tesfaye', 'Bereket', 'Henok', 'Mulugeta', 'Solomon', 'Biruk', 'Lemma', 'Gemechu', 'Fikru', 'Kedir', 'Tamirat', 'Ermias', 'Abdi', 'Getnet', 'Natnael'],
   ethF: ['Selam', 'Hirut', 'Meron', 'Tigist', 'Bethlehem', 'Liya', 'Mahlet', 'Saba', 'Eden', 'Almaz', 'Hana', 'Rahel', 'Chaltu', 'Lensa', 'Tsion', 'Genet'],
   ethP: ['Tesfaye', 'Haile', 'Bekele', 'Alemu', 'Girma', 'Wolde', 'Tadesse', 'Kebede', 'Mekonnen', 'Desta', 'Abera', 'Gebre', 'Tolosa', 'Negash', 'Ayana', 'Jemal', 'Usman', 'Fekadu'],
@@ -4009,6 +4017,24 @@ function generateSeed(now) {
     if (rx() < .35) makeTest(t, scrAt, 'glucose', false, { rng: rx, requestedAt: early(), tatH: between(rx, .1, .4) });
   });
   tests.sort((a, b) => a.requestedAt - b.requestedAt);
+
+  // about 90% of travelers have Somali names (Somalilanders, Somali Ethiopians and Djiboutians, and the diaspora)
+  const rs = mulberry32(252);
+  const SOM_FIRST = new Set([...NAMES.somM, ...NAMES.somF]);
+  const isSom = t => NATIONALITIES[t.nationality].pool === 'som' || NATIONALITIES[t.nationality].pool === 'dj' || SOM_FIRST.has(t.name.split(' ')[0]);
+  const nonSom = travelers.filter(t => !isSom(t));
+  const need = Math.max(0, Math.ceil(travelers.length * .9) - (travelers.length - nonSom.length));
+  const pConv = nonSom.length ? Math.min(1, need / nonSom.length) : 0;
+  nonSom.forEach(t => {
+    if (rs() >= pConv) return;
+    const pool = NATIONALITIES[t.nationality].pool;
+    if (pool !== 'eth' && pool !== 'dia') {   // other foreign nationals become Somaliland citizens travelling to/from that country
+      t.nationality = 'Somalilander';
+      t.docNumber = `SL${pad(intBetween(rs, 0, 9999999), 7)}`;
+      t.phone = `+252 63${intBetween(rs, 0, 9)} ${pad(intBetween(rs, 100, 999), 3)} ${pad(intBetween(rs, 0, 9999), 4)}`;
+    }
+    t.name = genName(rs, 'som', t.sex);
+  });
 
   const state = { version: 4, anchor: now, seq, stations, travelers, screenings, tests, vaccinations, alerts: [], audit: [], catalog: defaultCatalog() };
   syncAlerts(state, now, true);
@@ -5837,7 +5863,7 @@ ACT['reg-sample'] = () => {
   const r = mulberry32(Date.now() & 0xffffffff);
   const st = DB.stations.find(s => s.code === form.station.value) || DB.stations[0];
   const nat = pickW(r, STATION_NAT[st.code] || [['Somalilander', 1]]), sex = r() < .55 ? 'M' : 'F';
-  form.name.value = genName(r, NATIONALITIES[nat].pool, sex);
+  form.name.value = genName(r, r() < .9 ? 'som' : NATIONALITIES[nat].pool, sex);
   form.querySelector(`[name=sex][value=${sex}]`).checked = true;
   form.age.value = Math.round(between(r, 19, 62));
   form.nationality.value = nat;
@@ -6469,8 +6495,13 @@ PAGES.lab = {
     });
     // keep older unfinished tests visible on today's list so nothing is forgotten
     if (isToday && !query) list = list.concat(DB.tests.filter(t => t.requestedAt < day0 && isUnfinished(t) && (f.station === 'all' || t.station === f.station)));
-    const waiting = list.filter(isUnfinished), done = list.filter(t => !isUnfinished(t));
-    const shown = (f.show === 'waiting' ? waiting : f.show === 'done' ? done : list).sort((a, b) => (isOverdue(b, now) - isOverdue(a, now)) || b.requestedAt - a.requestedAt);
+    // one row per traveler — all of their tests are shown together and entered on one results sheet
+    const byTrav = new Map();
+    list.forEach(t => { if (!byTrav.has(t.travelerRef)) byTrav.set(t.travelerRef, []); byTrav.get(t.travelerRef).push(t); });
+    const groups = [...byTrav.values()].map(g => g.sort((a, b) => isUnfinished(b) - isUnfinished(a) || b.requestedAt - a.requestedAt));
+    const gOd = g => g.some(t => isOverdue(t, now)), gLast = g => Math.max(...g.map(t => t.requestedAt));
+    const waiting = groups.filter(g => g.some(isUnfinished)), done = groups.filter(g => !g.some(isUnfinished));
+    const shown = (f.show === 'waiting' ? waiting : f.show === 'done' ? done : groups).slice().sort((a, b) => (gOd(b) - gOd(a)) || gLast(b) - gLast(a));
     return `<div class="simple-wrap wide">
       <div class="page-intro"><div><h2>Laboratory</h2><p>Enter test results here. Search for a traveler to see all of their tests across dates.</p></div>
         <button class="btn primary" data-act="lab-add">${icon('plus')}Request a test</button></div>
@@ -6478,10 +6509,11 @@ PAGES.lab = {
         <div class="lab-date"><button class="icon-btn" data-act="lab-day" data-v="-1" aria-label="Previous day">${icon('chevLeft')}</button><input class="input" type="date" value="${f.date}" max="${isoDate(now)}" data-change="lab-date"><button class="icon-btn" data-act="lab-day" data-v="1" aria-label="Next day" ${isToday ? 'disabled' : ''}>${icon('chevRight')}</button>${isToday ? '' : `<button class="btn sm ghost" data-act="lab-today">Today</button>`}</div>
         <div class="searchbox lab-search">${icon('search')}<input class="input" id="lab-q" value="${attr(f.q)}" placeholder="Traveler name or reference — all dates" data-input="lab-q" aria-label="Search all tests by traveler"></div>
         <select class="select" data-change="lab-station">${stationOptions(f.station)}</select>
-        ${seg('lab-show', f.show, [['waiting', `Waiting (${waiting.length})`], ['done', `Done (${done.length})`], ['all', `All (${list.length})`]])}
+        ${seg('lab-show', f.show, [['waiting', `Waiting (${waiting.length})`], ['done', `Done (${done.length})`], ['all', `All (${groups.length})`]])}
       </div></div>
       ${query ? `<p class="small muted" style="margin:10px 2px 0">Showing tests for “${h(f.q.trim())}” across all dates.</p>` : ''}
-      <div class="lab-list">${shown.length ? shown.map(labRow).join('') : `<div class="card"><div class="card-b">${empty(query ? 'No tests found for this traveler' : f.show === 'waiting' ? 'No tests waiting' : 'No tests on this day', query ? 'Check the traveler name or reference and try again.' : f.show === 'waiting' ? 'All results for this day have been entered.' : 'Choose another day or station.')}</div></div>`}</div>
+      <p class="small muted" style="margin:10px 2px 0">One row per traveler · ${n0(list.length)} test${list.length === 1 ? '' : 's'} for ${n0(groups.length)} traveler${groups.length === 1 ? '' : 's'}${query ? '' : ' on this day'}. Open a row to enter all of the traveler's results together.</p>
+      <div class="lab-list">${shown.length ? shown.map(labGroupRow).join('') : `<div class="card"><div class="card-b">${empty(query ? 'No tests found for this traveler' : f.show === 'waiting' ? 'No tests waiting' : 'No tests on this day', query ? 'Check the traveler name or reference and try again.' : f.show === 'waiting' ? 'All results for this day have been entered.' : 'Choose another day or station.')}</div></div>`}</div>
     </div>`;
   },
   mount(params) {
@@ -6489,25 +6521,32 @@ PAGES.lab = {
     const ref = params.get('ref'); if (ref && IDX.byRef.get(ref)) setTimeout(() => { replaceHash('#/lab'); ACT['lab-add'](null, null, ref); }, 50);
   },
 };
-function labRow(x) {
-  const tr = IDX.byRef.get(x.travelerRef), now = Date.now();
-  const od = isOverdue(x, now), waiting = isUnfinished(x);
-  const age = testAgeH(x, now);
+function labTestMenu(x) {
+  const waiting = isUnfinished(x);
+  return `<div class="menu-h">${h(testDef(x).short || x.testName)} <span class="mono">${h(x.id)}</span></div>` + (waiting ? `
+    ${x.status === 'Requested' ? `<button data-act="lab-collect" data-id="${x.id}">${icon('flask')}Record sample taken</button>` : ''}
+    ${x.status !== 'Processing' ? `<button data-act="lab-status" data-id="${x.id}" data-v="Processing">${icon('activity')}Mark as in laboratory</button>` : ''}
+    ${!isNumericTest(x) ? `<button data-act="lab-quick" data-id="${x.id}" data-v="Negative">${icon('check')}Quick: negative</button><button data-act="lab-quick" data-id="${x.id}" data-v="Positive">${icon('alert')}Quick: positive</button>` : ''}
+    <button data-act="lab-status" data-id="${x.id}" data-v="Invalid">${icon('xCircle')}Mark sample invalid</button>
+    <button data-act="lab-status" data-id="${x.id}" data-v="Cancelled">${icon('x')}Cancel test</button>`
+    : ['Invalid', 'Cancelled'].includes(x.status) ? `<button data-act="lab-status" data-id="${x.id}" data-v="Requested">${icon('refresh')}Reopen test</button>` : `<button data-act="lab-edit" data-id="${x.id}">${icon('refresh')}Change result</button>`);
+}
+function labGroupRow(tests) {
+  const x0 = tests[0], tr = IDX.byRef.get(x0.travelerRef), now = Date.now();
+  const wait = tests.filter(isUnfinished), od = tests.some(t => isOverdue(t, now));
+  const first = wait[0] || x0;
+  const age = wait.length ? Math.max(...wait.map(t => testAgeH(t, now))) : 0;
+  const req = Math.min(...tests.map(t => t.requestedAt));
   return `<div class="card lab-row ${od ? 'od' : ''}">
-    <div class="lr-who"><span class="initials sm">${h(initials(tr ? tr.name : '?'))}</span><div><strong>${h(tr ? tr.name : x.travelerRef)}</strong><span>${h(x.travelerRef)} · ${h(stationName(x.station))}</span></div></div>
-    <div class="lr-test"><strong>${h(x.testName)}</strong><span>${h(x.id)} · normal: ${h(normalRangeText(x))} · requested ${fmtSDT(x.requestedAt)}${waiting ? ` · waiting ${age < 1 ? Math.round(age * 60) + ' min' : age.toFixed(1) + ' h'}` : ''}</span></div>
-    <div class="lr-state">${waiting ? labBadge(x) : resultBadge(x)}</div>
-    <div class="lr-act"><button class="icon-btn" data-act="toggle-menu" title="Test actions" aria-label="Test actions">${icon('more')}</button>
-      <div class="menu" role="menu">
-        ${waiting ? `
-          ${x.status === 'Requested' ? `<button data-act="lab-collect" data-id="${x.id}">${icon('flask')}Record sample taken</button>` : ''}
-          ${x.status !== 'Processing' ? `<button data-act="lab-status" data-id="${x.id}" data-v="Processing">${icon('activity')}Mark as in laboratory</button>` : ''}
-          <button data-act="lab-edit" data-id="${x.id}">${icon('check')}Enter results</button>
-          ${!isNumericTest(x) ? `<button data-act="lab-quick" data-id="${x.id}" data-v="Negative">${icon('check')}Quick: negative</button><button data-act="lab-quick" data-id="${x.id}" data-v="Positive">${icon('alert')}Quick: positive</button>` : ''}
-          <button data-act="lab-status" data-id="${x.id}" data-v="Invalid">${icon('xCircle')}Mark sample invalid</button>
-          <button data-act="lab-status" data-id="${x.id}" data-v="Cancelled">${icon('x')}Cancel test</button>`
-          : `<button data-act="print-traveler" data-ref="${attr(x.travelerRef)}">${icon('printer')}Print traveler record</button>${['Invalid', 'Cancelled'].includes(x.status) ? `<button data-act="lab-status" data-id="${x.id}" data-v="Requested">${icon('refresh')}Reopen test</button>` : `<button data-act="lab-edit" data-id="${x.id}">${icon('refresh')}Change result</button>`}`}
-      </div>
+    <div class="lr-who"><span class="initials sm">${h(initials(tr ? tr.name : '?'))}</span><div><strong>${h(tr ? tr.name : x0.travelerRef)}</strong><span>${h(x0.travelerRef)} · ${h(stationName(x0.station))}</span></div></div>
+    <div class="lr-tests">
+      ${tests.map(t => `<div class="lr-t"><span class="lr-tn" title="${attr(t.testName)} · ${attr(t.id)} · normal: ${attr(normalRangeText(t))}">${h(testDef(t).short || t.testName)}</span>${isUnfinished(t) ? labBadge(t) : resultBadge(t)}</div>`).join('')}
+      <span class="lr-meta">${tests.length} test${tests.length === 1 ? '' : 's'} · requested ${fmtSDT(req)}${wait.length ? ` · waiting ${age < 1 ? Math.round(age * 60) + ' min' : age.toFixed(1) + ' h'}` : ''}</span>
+    </div>
+    <div class="lr-state">${wait.length ? badge(tests.length === 1 ? 'Waiting for result' : `${wait.length} of ${tests.length} waiting`, od ? 'crit' : 'warn') : badge(tests.length === 1 ? 'Result entered' : 'All results entered', 'good')}</div>
+    <div class="lr-act"><button class="btn sm ${wait.length ? 'primary' : ''}" data-act="lab-edit" data-id="${first.id}">${icon(wait.length ? 'check' : 'eye')}${wait.length ? 'Enter results' : 'View results'}</button>
+      <button class="icon-btn" data-act="toggle-menu" title="Test actions" aria-label="Test actions">${icon('more')}</button>
+      <div class="menu lr-menu" role="menu">${tests.map(labTestMenu).join('<hr>')}<hr><button data-act="print-traveler" data-ref="${attr(x0.travelerRef)}">${icon('printer')}Print traveler record</button></div>
     </div></div>`;
 }
 ACT['lab-date'] = el => { UI.lab.date = el.value || isoDate(Date.now()); refresh(); };
