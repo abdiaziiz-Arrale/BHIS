@@ -5460,16 +5460,16 @@ function ministryData(f) {
 }
 function confirmedByCountryHTML(m) {
   const byC = {};
-  m.confirmed.forEach(t => { const tr = IDX.byRef.get(t.travelerRef); const c = tr ? tr.originCountry : 'Unknown';
-    const o = byC[c] || (byC[c] = { n: 0, st: new Set(), nat: new Set(), last: 0, refs: [] });
-    o.n++; o.st.add(stationName(t.station)); if (tr) { o.nat.add(tr.nationality); o.refs.push(tr.ref); } o.last = Math.max(o.last, t.resultAt || 0); });
+  m.confirmed.forEach(t => { const tr = IDX.byRef.get(t.travelerRef); const c = tr ? tr.nationality : 'Unknown';
+    const o = byC[c] || (byC[c] = { n: 0, st: new Set(), last: 0, refs: [] });
+    o.n++; o.st.add(stationName(t.station)); if (tr) o.refs.push(tr.ref); o.last = Math.max(o.last, t.resultAt || 0); });
   const rows = Object.entries(byC).sort((a, b) => b[1].n - a[1].n || b[1].last - a[1].last);
   const max = Math.max(1, ...rows.map(r => r[1].n));
-  return `<div class="section-title"><h3>Confirmed cases by country of origin</h3><p>Where confirmed cases in the period were coming from · ${n0(m.confirmed.length)} confirmed</p></div>
-    <div class="card"><div class="table-wrap">${rows.length ? `<table class="tbl cardify"><thead><tr><th class="c-primary">Country of origin</th><th class="num">Confirmed</th><th style="width:34%">Share</th><th>Border stations</th><th class="hide-md">Nationalities</th><th>Most recent</th></tr></thead><tbody>
-      ${rows.map(([c, o]) => `<tr class="clickable" data-act="go" data-page="records" data-params='${JSON.stringify({ ref: o.refs[0] || '' })}'><td><strong>${h(c)}</strong>${AFFECTED_COUNTRIES.includes(c) ? ` ${badge('Outbreak area', 'crit', 'nodot')}` : ''}</td><td class="num"><b style="color:var(--crit-ink)">${o.n}</b></td>
+  return `<div class="section-title"><h3>Confirmed cases by nationality</h3><p>Nationality of the confirmed cases in the period · ${n0(m.confirmed.length)} confirmed</p></div>
+    <div class="card"><div class="table-wrap">${rows.length ? `<table class="tbl cardify"><thead><tr><th class="c-primary">Nationality</th><th class="num">Confirmed</th><th style="width:34%">Share</th><th>Border stations</th><th>Most recent</th></tr></thead><tbody>
+      ${rows.map(([c, o]) => `<tr class="clickable" data-act="go" data-page="records" data-params='${JSON.stringify({ ref: o.refs[0] || '' })}'><td><strong>${h(c)}</strong></td><td class="num"><b style="color:var(--crit-ink)">${o.n}</b></td>
         <td><div class="cell-bar"><div class="track"><i style="width:${(o.n / max * 100).toFixed(0)}%;background:var(--crit)"></i></div><b class="nowrap">${pct(o.n, m.confirmed.length)}</b></div></td>
-        <td class="small">${h([...o.st].join(', '))}</td><td class="small hide-md">${h([...o.nat].join(', '))}</td><td class="small nowrap">${o.last ? fmtSDT(o.last) : '—'}</td></tr>`).join('')}
+        <td class="small">${h([...o.st].join(', '))}</td><td class="small nowrap">${o.last ? fmtSDT(o.last) : '—'}</td></tr>`).join('')}
       </tbody></table>` : empty('No confirmed cases', 'No confirmed positive result was reported in this period.')}</div></div>`;
 }
 PAGES.ministry = {
