@@ -152,6 +152,10 @@ h1, h2, h3, h4 { margin: 0; font-weight: 600; letter-spacing: -.01em; }
 }
 .icon-btn.menu-btn { display: none; }
 .topbar .crumbs { font-size: 12.5px; color: var(--ink-3); }
+.top-title { display: flex; align-items: center; gap: 14px; min-width: 0; }
+.top-text { min-width: 0; }
+.top-logos { display: flex; align-items: center; gap: 10px; flex: none; padding-right: 14px; border-right: 1px solid var(--line); }
+.top-logos img { height: 40px; width: auto; max-width: 90px; object-fit: contain; display: block; }
 .topbar h1 { font-size: 19px; }
 .topbar-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
 .header-user { color: var(--ink-2); font-size: 12px; white-space: nowrap; }
@@ -776,6 +780,7 @@ body.fs-mode .sidebar { display: none; }
 
   .topbar { padding: 8px 12px; gap: 10px; min-height: 56px; }
   .topbar .crumbs { display: none; }
+  .top-title { gap: 8px; } .top-logos { gap: 6px; padding-right: 8px; } .top-logos img { height: 28px; max-width: 54px; }
   .topbar h1 { font-size: 16.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .topbar > div:nth-child(2) { min-width: 0; flex: 1; }
   .topbar-right { margin-left: 0; gap: 6px; flex: none; }
@@ -1146,7 +1151,6 @@ details.more summary { cursor: pointer; color: var(--green-700); font-size: 13px
       </div>
     <nav class="nav" id="nav"></nav>
     <div class="sidebar-foot">
-      <div class="partner-strip" aria-label="Partners"><div class="ps-logos"><img src="KMUH.jpg" alt="Kaohsiung Medical University Chung-Ho Memorial Hospital logo" title="Kaohsiung Medical University Chung-Ho Memorial Hospital"><img src="ICDF.jpg" alt="Taiwan ICDF logo" title="Taiwan ICDF"></div></div>
       <div class="user-card"><div class="avatar" title="Staff">ST</div></div>
       <div class="foot-actions"><button data-act="open-about" title="About, logo and settings">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><span class="lbl">About &amp; settings</span></button></div>
@@ -1155,7 +1159,7 @@ details.more summary { cursor: pointer; color: var(--green-700); font-size: 13px
   <div class="main">
     <header class="topbar">
       <button class="icon-btn menu-btn" data-act="toggle-nav" aria-label="Open menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg></button>
-      <div><div class="crumbs" id="crumbs"></div><h1 id="page-title">National Dashboard</h1></div>
+      <div class="top-title"><div class="top-logos" aria-label="Ministry and partner logos"><img src="MOHD.jpeg" alt="Ministry of Health Development logo" title="Ministry of Health Development"><img src="KMUH.jpg" alt="Kaohsiung Medical University Chung-Ho Memorial Hospital logo" title="Kaohsiung Medical University Chung-Ho Memorial Hospital"><img src="ICDF.jpg" alt="Taiwan ICDF logo" title="Taiwan ICDF"></div><div class="top-text"><div class="crumbs" id="crumbs"></div><h1 id="page-title">National Dashboard</h1></div></div>
       <div class="topbar-right">
         <div class="clock" id="clock"></div>
         <span class="header-user" id="header-user"></span>
